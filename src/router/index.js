@@ -1,22 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Login from "@/views/Login";
+import Login from "@/components/Login";
 
 Vue.use(VueRouter)
 
 export default new VueRouter({
-  mode: "history",
+ /* mode: history, //去除#*/
   routes:[
     {
-      path: '/home',
-      name: 'home',
-      component: Home
+      path: '/login',
+      component: Login
     },
     {
       path: '/',
-      name: 'login',
-      component: Login
-    },
+      redirect:'/login'
+    }
   ]
 })
