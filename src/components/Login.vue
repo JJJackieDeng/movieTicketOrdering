@@ -1,10 +1,17 @@
 <template>
     <div class="login_container">
         <div class="login_box">
+            <!--头像区域-->
             <div class="avatar_box">
 <!--                <img src="../assets/img/Luffy.jpg">-->
                 <img src="../assets/logo.png">
             </div>
+            <!--登录表单区域-->
+            <el-form label-width="80px">
+                <el-form-item label="登录">
+                    <el-input></el-input>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 </template>
