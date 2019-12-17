@@ -7,12 +7,12 @@
                 <!--<img src="../assets/logo.png">-->
             </div>
             <!--登录表单区域-->
-            <el-form label-width="80px" class="login_form">
-                <el-form-item label="用户名">
-                    <el-input prefix-icon="el-icon-search" placeholder="请输入用户名"></el-input>
+            <el-form class="login_form">
+                <el-form-item>
+                    <el-input prefix-icon="iconfont iconyonghu" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input prefix-icon="el-icon-search" placeholder="请输入密码"></el-input>
+                <el-form-item>
+                    <el-input prefix-icon="iconfont iconmima1" placeholder="请输入密码"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
                     <el-button type="primary">登录</el-button>
