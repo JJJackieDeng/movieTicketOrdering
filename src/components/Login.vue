@@ -7,12 +7,12 @@
                 <!--<img src="../assets/logo.png">-->
             </div>
             <!--登录表单区域-->
-            <el-form class="login_form">
-                <el-form-item>
-                    <el-input prefix-icon="iconfont iconyonghu" placeholder="请输入用户名"></el-input>
+            <el-form :model='loginForm' :rules="loginFormRules" class="login_form">
+                <el-form-item prop="username">
+                    <el-input v-model="loginForm.username" prefix-icon="iconfont iconyonghu" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item>
-                    <el-input prefix-icon="iconfont iconmima1" placeholder="请输入密码"></el-input>
+                <el-form-item prop="password">
+                    <el-input v-model="loginForm.password" prefix-icon="iconfont iconmima1" type="password" placeholder="请输入密码"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
                     <el-button type="primary">登录</el-button>
@@ -25,12 +25,31 @@
 
 <script>
     export default {
-    }
+        data(){
+            return{
+                //登录表单的数据绑定对象
+                loginForm:{
+                    username:'',
+                    password:''
+                },
+                loginFormRules:{
+                    username:[
+                        {   require: true,message:"请输入合法的字符，不包含！@#￥%……&*（）",trigger: 'blur'},
+                        {min:3,max:11,message: '请输入3~11个字符',trigger: 'blur'}
+                    ],
+                    password: [
+                        {   require: true,message:"请输入合法的密码",trigger: 'blur'},
+                        {min:6,max:18,message: '密码长度不小于3且不超过18',trigger: 'blur'}
+                    ]
+                }
+            };
+        }
+    };
 </script>
 
 <style lang="scss" scoped>
     .login_container{
-    background-color: #2b4b6b;
+    background-color: #0052ff;
     }
     .login_box{
         background-color: #fff;
@@ -56,7 +75,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background-color: #eee;
+            background-color: #eeeeee;
             left: 50%;
             transform: translate(-50%,-6%);
             position: absolute;
