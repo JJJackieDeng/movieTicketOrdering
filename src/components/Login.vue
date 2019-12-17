@@ -7,16 +7,16 @@
                 <!--<img src="../assets/logo.png">-->
             </div>
             <!--登录表单区域-->
-            <el-form :model='loginForm' :rules="loginFormRules" class="login_form">
+            <el-form ref="loginFormRef" :model='loginForm' :rules="loginFormRules" class="login_form">
                 <el-form-item prop="username">
-                    <el-input v-model="loginForm.username" prefix-icon="iconfont iconyonghu" placeholder="请输入用户名"></el-input>
+                    <el-input v-model="loginForm.username" prefix-icon="iconfont iconyonghu" placeholder="用户名"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" prefix-icon="iconfont iconmima1" type="password" placeholder="请输入密码"></el-input>
+                    <el-input v-model="loginForm.password" prefix-icon="iconfont iconmima1" type="password" placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
-                    <el-button type="primary">登录</el-button>
-                    <el-button type="info" plain>重置</el-button>
+                    <el-button type="primary" @click="login">登录</el-button>
+                    <el-button type="info" @click="resetLoginForm" plain>重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -34,15 +34,26 @@
                 },
                 loginFormRules:{
                     username:[
-                        {   require: true,message:"请输入合法的字符，不包含！@#￥%……&*（）",trigger: 'blur'},
-                        {min:3,max:11,message: '请输入3~11个字符',trigger: 'blur'}
+                        {   require: true,message:"请输入用户名",trigger: "blur"},
+                        {min:3,max:11,message:"请输入3~11个字符",trigger: "blur"}
                     ],
                     password: [
-                        {   require: true,message:"请输入合法的密码",trigger: 'blur'},
-                        {min:6,max:18,message: '密码长度不小于3且不超过18',trigger: 'blur'}
+                        {   require: true,message:"请输入密码",trigger: "blur"},
+                        {min:6,max:18,message: "密码长度不小于3且不超过18",trigger: "blur"}
                     ]
                 }
             };
+        },
+        methods:{
+            resetLoginForm(){
+                this.$refs.loginFormRef.resetFields();
+            },
+            login(){
+                this.$refs.loginFormRef.validate((valid) => {
+                    if (!valid)
+                        return;
+                });
+            }
         }
     };
 </script>
