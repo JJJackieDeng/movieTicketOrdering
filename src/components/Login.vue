@@ -34,12 +34,12 @@
                 },
                 loginFormRules:{
                     username:[
-                        {   require: true,message:"请输入用户名",trigger: "blur"},
+                        {   required: true,message:"请输入用户名",trigger: "blur"},
                         {min:3,max:11,message:"请输入3~11个字符",trigger: "blur"}
                     ],
                     password: [
-                        {   require: true,message:"请输入密码",trigger: "blur"},
-                        {min:6,max:18,message: "密码长度不小于3且不超过18",trigger: "blur"}
+                        {   required: true,message:"请输入密码",trigger: "blur"},
+                        {min:6,max:18,message: "密码长度不小于6且不超过18",trigger: "blur"}
                     ]
                 }
             };
@@ -49,9 +49,10 @@
                 this.$refs.loginFormRef.resetFields();
             },
             login(){
-                this.$refs.loginFormRef.validate((valid) => {
-                    if (!valid)
-                        return;
+                this.$refs.loginFormRef.validate(async valid => {
+                    if (!valid)  return;
+                    const result=await this.$http.post('login',this.loginForm);
+                    console.log(result);
                 });
             }
         }
