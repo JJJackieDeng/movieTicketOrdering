@@ -5,6 +5,11 @@ import router from './router'
 import store from './store'
 import './assets/css/global.css'
 import ElementUi from 'element-ui'
+import {Button} from "element-ui";
+import {Form,FormItem} from "element-ui";
+import {Input} from "element-ui";
+//导入message弹窗
+import {Message} from "element-ui";
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
 //导入字体图标
 import '../src/assets/font/iconfont.css'
@@ -17,6 +22,10 @@ Vue.prototype.$http=axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUi)
+Vue.use(Button)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.prototype.$message= Message
 
 new Vue({
   router,
