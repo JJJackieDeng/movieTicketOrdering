@@ -1,5 +1,6 @@
 <template>
     <el-container>
+        <el-button type="info" @click="logout">退出</el-button>
         <el-header>海贼王：大结局终章</el-header>
         <el-container>
             <el-aside width="200px">
@@ -37,6 +38,13 @@
                 }
             }
 
+        },
+        methods: {
+            logout(){
+                /*清空缓存并重定向登录页面*/
+                window.sessionStorage.clear();
+                this.$router.push("/login")
+            }
         }
     }
 </script>
