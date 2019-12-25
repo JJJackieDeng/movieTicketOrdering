@@ -7,7 +7,9 @@ import './assets/css/global.css'
 import ElementUi from 'element-ui'
 import {Button} from "element-ui";
 import {Form,FormItem} from "element-ui";
+/*
 import {Input} from "element-ui";
+*/
 //导入message弹窗
 import {Message} from "element-ui";
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
