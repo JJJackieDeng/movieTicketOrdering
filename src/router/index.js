@@ -1,8 +1,8 @@
-/*import Vue from 'vue'*/
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 import Login from "@/components/Login";
-import Main from  "@/components/Main"
-import {Vue} from "vue/types/vue";
+import Main from  "@/components/Main";
+
 
 Vue.use(VueRouter);
 
