@@ -42,7 +42,12 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {"no-console":"off"},
+    "rules": {"no-console":"off",
+      "generator-star-spacing": "off",
+      "no-tabs":"off",
+      "no-unused-vars":"off",
+      "no-irregular-whitespace":"off",
+      "no-debugger": "off"},
     "parserOptions": {
       "parser": "babel-eslint"
     }
