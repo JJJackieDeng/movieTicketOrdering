@@ -6,6 +6,8 @@ import store from './store'
 import './assets/css/global.css'
 import ElementUi from 'element-ui'
 import {Form,FormItem,Message,Button} from 'element-ui';
+//自适应屏幕大小
+import 'lib-flexible/flexible'
 /*
 import {Input} from "element-ui";
 */

@@ -2,7 +2,7 @@
     <el-container>
         <el-header>天地影院
             <div align="right" style="float:right">
-                <el-button type="info" @click="logout">退出</el-button>
+                <el-button type="info" round @click="logout">注销</el-button>
             </div>
         </el-header>
         <el-container>
@@ -81,7 +81,7 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
     .el-header, .el-footer {
         background-color: rgba(255, 255, 255, 0);
         color: rgba(0, 0, 0, 0.76);
@@ -105,8 +105,8 @@
     .showItem {
         display:inline-block;
         width: 180px;
-        height: 220px;
-        margin: 1px 0px 10px 5px;
+        height: 250px;
+        margin: 10px 0px 10px 20px;
         background-color: #fffdf5;
         border-radius: 5px;
         text-align: center;
