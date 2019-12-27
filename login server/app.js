@@ -1,14 +1,21 @@
-var express = require('express');
-var app = new express();
-var router = require('./route/user');
+var express = require('express')
+bodyParser = require('body-parser')
+var app = new express()
 
-bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+var users = [
+    { name: 'admin', pass: '123' },
+    { name: 'user', pass: '321' }
+]
 
-app.use('/users', router);// 将路由注册到/users的路径下
+app.post('/validate', (req, res) => {
+    var user = users.find((item) => {
+        return item.name == req.body.name && item.pass == req.body.pass
+    })
+    res.json(user ? user : {})
+})
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000
 
-app.listen(port);
-console.log('app is listening on port: ' + port);
+app.listen(port)
+console.log('app is listening on port: ' + port)
+

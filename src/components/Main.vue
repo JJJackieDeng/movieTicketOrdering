@@ -1,7 +1,10 @@
 <template>
     <el-container>
-        <el-button type="info" @click="logout">退出</el-button>
-        <el-header>海贼王：大结局终章</el-header>
+        <el-header>天地影院
+            <div align="right" style="float:right">
+                <el-button type="info" @click="logout">退出</el-button>
+            </div>
+        </el-header>
         <el-container>
             <el-aside width="200px">
                 <h1>热门影院</h1>
@@ -10,6 +13,9 @@
                         <el-input v-model="popularCinema.address" prefix-icon="el-icon-search"></el-input>
                     </el-form-item>
                 </el-form>
+                <el-footer>叶问4：完结篇</el-footer>
+                <el-footer>Footer</el-footer>
+                <el-footer>Footer</el-footer>
                 <el-footer>Footer</el-footer>
                 <el-footer>Footer</el-footer>
                 <el-footer>Footer</el-footer>
@@ -20,8 +26,34 @@
             </el-aside>
             <el-container>
                 <el-main>
-                    目前热播的电影
-                    <el-image></el-image>
+                    <div class="showItem" ><img src=""></div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem">目前热播的电影</div>
                 </el-main>
                 <el-footer>Footer</el-footer>
             </el-container>
@@ -51,8 +83,8 @@
 
 <style scoped>
     .el-header, .el-footer {
-        background-color: rgba(0, 0, 0, 0.68);
-        color: rgb(255, 255, 255);
+        background-color: rgba(255, 255, 255, 0);
+        color: rgba(0, 0, 0, 0.76);
         text-align: center;
         line-height: 60px;
     }
@@ -67,7 +99,18 @@
     .el-main {
         background-color: #E9EEF3;
         color: #333;
-        text-align: center;
+        text-align: left;
         line-height: 160px;
+    }
+    .showItem {
+        display:inline-block;
+        width: 180px;
+        height: 220px;
+        margin: 1px 0px 10px 5px;
+        background-color: #fffdf5;
+        border-radius: 5px;
+        text-align: center;
+        padding-top: 5px;
+
     }
 </style>

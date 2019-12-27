@@ -6,9 +6,8 @@ import Main from  "@/components/Main";
 
 Vue.use(VueRouter);
 
-/*
 export default new VueRouter({
- /!* mode: history, //去除#*!/
+  mode: "history", //去除#
   routes:[
     {
       path: '/login',
@@ -24,7 +23,6 @@ export default new VueRouter({
     }
   ]
 })
-*/
 const router = new VueRouter({
     routes:[
         {
@@ -33,7 +31,8 @@ const router = new VueRouter({
         },
         {
             path: '/',
-            redirect:'/Main'
+            component: Main
+/*            redirect:'/Main'*/
         },
         {
             path: '/main',
@@ -52,5 +51,5 @@ router.beforeEach((to,from,next)=>{
     next()
 });
 
-export default router
+// export default router
 
