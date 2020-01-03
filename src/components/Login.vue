@@ -49,14 +49,24 @@
                 this.$refs.loginFormRef.resetFields();
             },
             login(){
-                this.$refs.loginFormRef.validate(async valid => {
-                    if (!valid)  return;
-                    const {data: res}=await this.$http.post("login",this.loginForm);
-                    if(res.meta.status !==200) return this.$message.error("登录失败");
-                    this.$message.success("登录成功"); //2019年12月25日23:44:57 meta.status未设置正常，因此提示失败
-                    window.sessionStorage.setItem("token",res.meta.token);
-                    /*到主页面*/
-                    this.$router.push('/Main');
+                this.$refs.loginFormRef.validate((valid) => {
+                    // if (!valid)  return;
+                    // const {data: res}=await this.$http.post("login",this.loginForm);
+                    // if(res.meta.status !==200) return this.$message.error("登录失败");
+                    // this.$message.success("登录成功"); //2019年12月25日23:44:57 meta.status未设置正常，因此提示失败
+                    // window.sessionStorage.setItem("token",res.meta.token);
+                    // /*到主页面*/
+                    // this.$router.push('/Main');
+                    if (valid){
+                        if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
+                            this.$router.push('/Main');
+                        }else{
+                            this.$message.error("账号密码错误")
+                            return false;
+                        }
+                    }else{
+                        this.$message.error("请填写账号密码")
+                    }
                 });
             }
         }

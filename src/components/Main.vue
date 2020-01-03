@@ -2,7 +2,8 @@
     <el-container>
         <el-header>天地影院
             <div align="right" style="float:right">
-                <el-button type="info" round @click="logout">注销</el-button>
+                <el-button round @click="logout">注销</el-button>
+
             </div>
         </el-header>
         <el-container>
@@ -26,34 +27,10 @@
             </el-aside>
             <el-container>
                 <el-main>
-                    <div class="showItem" ><img src=""></div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
-                    <div class="showItem">目前热播的电影</div>
+                    <div class="showItem" v-for="(lists,index) in 10" :key="index">
+                        <img src="../assets/logo.png"  width="180" height="250"/>
+                    </div>
+
                 </el-main>
                 <el-footer>Footer</el-footer>
             </el-container>
@@ -74,7 +51,7 @@
         methods: {
             logout(){
                 /*清空缓存并重定向登录页面*/
-                window.sessionStorage.clear();
+                sessionStorage.clear();
                 this.$router.push("/login")
             }
         }
@@ -83,8 +60,8 @@
 
 <style lang="scss" scoped>
     .el-header, .el-footer {
-        background-color: rgba(255, 255, 255, 0);
-        color: rgba(0, 0, 0, 0.76);
+        background-color: #ffffff;
+        color: #000;
         text-align: center;
         line-height: 60px;
     }
@@ -97,19 +74,19 @@
     }
 
     .el-main {
-        background-color: #E9EEF3;
+        background-color: #ffffff;
         color: #333;
-        text-align: left;
+        text-align: center;
         line-height: 160px;
     }
     .showItem {
         display:inline-block;
         width: 180px;
         height: 250px;
-        margin: 10px 0px 10px 20px;
+        margin: 10px 0px 10px 60px;
         background-color: #fffdf5;
         border-radius: 5px;
-        text-align: center;
+        /*text-align: center;*/
         padding-top: 5px;
 
     }
