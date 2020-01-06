@@ -59,6 +59,14 @@
                     // this.$router.push('/Main');
                     if (valid){
                         if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
+                            this.$axios.get('/xxxx',{
+                                user:this.loginForm.username,
+                                pass:this.loginForm.password
+                            }).then(res=>{
+                                console.log("登录请求")
+                            }).catch(err=>{
+                                console.log(err)
+                            })
                             this.$router.push('/Main');
                         }else{
                             this.$message.error("账号密码错误")

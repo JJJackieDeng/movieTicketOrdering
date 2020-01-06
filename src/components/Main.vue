@@ -6,6 +6,13 @@
 
             </div>
         </el-header>
+        <el-container style="height: 100%">
+            <el-carousel :interval="4000" type="card" height="200px">
+                <el-carousel-item v-for="item in 6" :key="item">
+                    <h3>{{ item }}</h3>
+                </el-carousel-item>
+            </el-carousel>
+        </el-container>
         <el-container>
             <el-aside width="200px">
                 <h1>热门影院</h1>
@@ -28,7 +35,11 @@
             <el-container>
                 <el-main>
                     <div class="showItem" v-for="(lists,index) in 10" :key="index">
-                        <img src="../assets/logo.png"  width="180" height="250"/>
+                        <img src="../assets/Movie1.jpg"  width="180" height="250"/>
+<!--                        <img src="../assets/Movie2.jpg"  width="180" height="250"/>-->
+<!--                        <img src="../assets/Movie3.jpg"  width="180" height="250"/>-->
+<!--                        <img src="../assets/Movie4.jpg"  width="180" height="250"/>-->
+<!--                        <img src="../assets/Movie5.jpg"  width="180" height="250"/>-->
                     </div>
 
                 </el-main>
@@ -59,6 +70,14 @@
 </script>
 
 <style lang="scss" scoped>
+    html,body,#app,.el-container{
+        /*设置内部填充为0，几个布局元素之间没有间距*/
+        padding: 0px;
+        /*外部间距也是如此设置*/
+        margin: 0px;
+        /*统一设置高度为100%*/
+        height: 100%;
+    }
     .el-header, .el-footer {
         background-color: #ffffff;
         color: #000;
@@ -89,5 +108,20 @@
         /*text-align: center;*/
         padding-top: 5px;
 
+    }
+    .el-carousel__item h3 {
+        color: #475669;
+        font-size: 14px;
+        opacity: 0.75;
+        line-height: 200px;
+        margin: 0;
+    }
+
+    .el-carousel__item:nth-child(2n) {
+        background-color: #99a9bf;
+    }
+
+    .el-carousel__item:nth-child(2n+1) {
+        background-color: #d3dce6;
     }
 </style>
