@@ -1,15 +1,15 @@
 <template>
     <el-container>
-        <el-header>天地影院
+        <el-header>
             <div align="right" style="float:right">
                 <el-button round @click="logout">注销</el-button>
 
             </div>
         </el-header>
-        <el-container style="height: 100%">
-            <el-carousel :interval="4000" type="card" height="200px">
-                <el-carousel-item v-for="item in 6" :key="item">
-                    <h3>{{ item }}</h3>
+        <el-container style="height: 55%;width: 420px;background-color: #222222" >
+            <el-carousel :interval="3000" type="card" height="250px" style="width: 100%;">
+                <el-carousel-item v-for="item in imageHotsList" :key="item.id">
+                    <img :src="item.idView" class="image">
                 </el-carousel-item>
             </el-carousel>
         </el-container>
@@ -34,9 +34,12 @@
             </el-aside>
             <el-container>
                 <el-main>
-                    <div class="showItem" v-for="(lists,index) in 10" :key="index">
-                        <img src="../assets/Movie1.jpg"  width="180" height="250"/>
-<!--                        <img src="../assets/Movie2.jpg"  width="180" height="250"/>-->
+                    <div class="showItem" v-for="(lists,index) in 1" :key="index">
+                        <div>
+                            <img src="../assets/Movie1.jpg"  width="180" height="250"/>
+                            <img src="../assets/Movie2.jpg"  width="180" height="250"/>
+                        </div>
+
 <!--                        <img src="../assets/Movie3.jpg"  width="180" height="250"/>-->
 <!--                        <img src="../assets/Movie4.jpg"  width="180" height="250"/>-->
 <!--                        <img src="../assets/Movie5.jpg"  width="180" height="250"/>-->
@@ -56,7 +59,16 @@
                 popularCinema:{
                     address:'',
                 }
+                ,
+                imageHotsList:[
+                    {id:0,idView:require('../assets/Movie1.jpg')},
+                    {id:1,idView:require('../assets/Movie2.jpg')},
+                    {id:1,idView:require('../assets/Movie3.jpg')},
+                    {id:1,idView:require('../assets/Movie4.jpg')},
+                    {id:1,idView:require('../assets/Movie5.jpg')},
+                    ]
             }
+
 
         },
         methods: {
@@ -65,7 +77,8 @@
                 sessionStorage.clear();
                 this.$router.push("/login")
             }
-        }
+        },
+
     }
 </script>
 
@@ -118,8 +131,8 @@
     }
 
     .el-carousel__item:nth-child(2n) {
-        background-color: #99a9bf;
-    }
+             background-color: #99a9bf;
+         }
 
     .el-carousel__item:nth-child(2n+1) {
         background-color: #d3dce6;
