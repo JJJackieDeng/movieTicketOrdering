@@ -36,8 +36,8 @@
                 <el-main>
                     <div class="showItem" v-for="(lists,index) in 1" :key="index">
                         <div>
-                            <img src="../assets/img/hotsList/Movie1.jpg" width="180" height="250"/>
-                            <img src="../assets/img/hotsList/Movie2.jpg" width="180" height="250"/>
+                            <img src="../assets/img/hotsList/Movie1.jpg" width="225" height="305"/>
+                            <img src="../assets/img/hotsList/Movie2.jpg" width="225" height="305"/>
                         </div>
 
 <!--                        <img src="../assets/Movie3.jpg"  width="180" height="250"/>-->
