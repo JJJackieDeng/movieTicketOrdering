@@ -7,7 +7,7 @@ import './assets/css/global.css'
 import ElementUi from 'element-ui'
 import {Form,FormItem,Message,Button} from 'element-ui';
 //自适应屏幕大小
-import 'lib-flexible/flexible'
+// import 'lib-flexible/flexible'
 /*
 import {Input} from "element-ui";
 */
@@ -15,6 +15,13 @@ import {Input} from "element-ui";
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
 //导入字体图标
 import '../src/assets/font/iconfont.css'
+//预览图片支持
+import VueImageSwipe from 'vue-image-swipe'
+import 'vue-image-swipe/dist/vue-image-swipe.css'
+
+//导入viewerjs
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 
 import axios from 'axios'
 //配置请求的根路径
@@ -30,6 +37,21 @@ Vue.use(Button);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.prototype.$message= Message;
+Vue.use(VueImageSwipe)
+
+Vue.use(Viewer, {
+    defaultOptions: {
+        zIndex: 9999,
+        title:false,//    显示当前图片的标题
+        scalable:false,//图片是否可翻转
+        rotatable:false,//图片是否可旋转
+        tooltip:false,//显示缩放百分比
+        navbar:false,//显示缩略图导航
+        loop:false,
+        loading:false
+
+    }
+})
 
 new Vue({
   router,

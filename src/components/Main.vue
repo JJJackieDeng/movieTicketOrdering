@@ -8,7 +8,7 @@
         </el-header>
         <el-container style="height: 55%;width: 420px;background-color: #222222" >
             <el-carousel :interval="3000" type="card" height="250px" style="width: 100%;">
-                <el-carousel-item v-for="item in imageHotsList" :key="item.id">
+                <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id">
                     <img :src="item.idView" class="image">
                 </el-carousel-item>
             </el-carousel>
@@ -36,8 +36,8 @@
                 <el-main>
                     <div class="showItem" v-for="(lists,index) in 1" :key="index">
                         <div>
-                            <img src="../assets/Movie1.jpg"  width="180" height="250"/>
-                            <img src="../assets/Movie2.jpg"  width="180" height="250"/>
+                            <img src="../assets/img/hotsList/Movie1.jpg" width="180" height="250"/>
+                            <img src="../assets/img/hotsList/Movie2.jpg" width="180" height="250"/>
                         </div>
 
 <!--                        <img src="../assets/Movie3.jpg"  width="180" height="250"/>-->
@@ -61,11 +61,11 @@
                 }
                 ,
                 imageHotsList:[
-                    {id:0,idView:require('../assets/Movie1.jpg')},
-                    {id:1,idView:require('../assets/Movie2.jpg')},
-                    {id:1,idView:require('../assets/Movie3.jpg')},
-                    {id:1,idView:require('../assets/Movie4.jpg')},
-                    {id:1,idView:require('../assets/Movie5.jpg')},
+                    {id:0,idView:require('../assets/img/hotsList/Movie1.jpg')},
+                    {id:1,idView:require('../assets/img/hotsList/Movie2.jpg')},
+                    {id:2,idView:require('../assets/img/hotsList/Movie3.jpg')},
+                    {id:3,idView:require('../assets/img/hotsList/Movie4.jpg')},
+                    {id:4,idView:require('../assets/img/hotsList/Movie5.jpg')},
                     ]
             }
 
@@ -76,8 +76,14 @@
                 /*清空缓存并重定向登录页面*/
                 sessionStorage.clear();
                 this.$router.push("/login")
+            },
+            preview(index) {
+                this.$imagePreview({
+                    images: this.imageHotsList,
+                    index: index,
+                })
             }
-        },
+        }
 
     }
 </script>
