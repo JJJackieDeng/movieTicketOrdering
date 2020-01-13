@@ -33,6 +33,29 @@
                 <el-footer>Footer</el-footer>
             </el-aside>
             <el-container>
+                <el-header>
+                    <div align="right" style="float:right">
+                        <el-button round @click="logout">注销</el-button>
+
+                    </div>
+                </el-header>
+                <div style="margin:0 auto;">
+                    <el-container style="height: 55%;width: 420px;background-color: #222222" >
+                    <el-carousel :interval="3000" type="card" height="250px" style="width: 100%;">
+                        <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id">
+                            <img :src="item.idView" class="image">
+                        </el-carousel-item>
+                    </el-carousel>
+                    </el-container>
+                    <el-container style="height: 55%;width: 420px;background-color: #222222" >
+                        <el-carousel :interval="3000" type="card" height="250px" style="width: 100%;">
+                            <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id">
+                                <img :src="item.idView" class="image">
+                            </el-carousel-item>
+                        </el-carousel>
+                    </el-container>
+                </div>
+
                 <el-main>
                     <div class="showItem" v-for="(lists,index) in 1" :key="index">
                         <div>
