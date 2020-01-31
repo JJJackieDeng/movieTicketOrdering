@@ -23,12 +23,11 @@ import 'vue-image-swipe/dist/vue-image-swipe.css'
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
 
-import axios from 'axios'
 //配置请求的根路径
 // axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';  //本地环境
 //设置反向代理，前端请求默认发送到http://localhost:8443/api
-axios.defaults.baseURL = "http://localhost:8444/api"
-Vue.prototype.$http=axios;
+// axios.defaults.baseURL = "http://localhost:8444/api"
+// Vue.prototype.$http=axios;
 
 Vue.config.productionTip = false;
 

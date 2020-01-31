@@ -2,7 +2,7 @@
     <div class="login_container">
         <div class="login_box">
             <!--头像区域-->
-            <div class="avatar_box">
+            <div class="head_box">
                 <img src="../assets/img/Luffy.jpg">
                 <!--<img src="../assets/logo.png">-->
             </div>
@@ -57,24 +57,54 @@
                     // window.sessionStorage.setItem("token",res.meta.token);
                     // /*到主页面*/
                     // this.$router.push('/Main');
-                    if (valid){
-                        if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
-                            this.$axios.get('/xxxx',{
-                                user:this.loginForm.username,
-                                pass:this.loginForm.password
-                            }).then(res=>{
-                                console.log("登录请求")
-                            }).catch(err=>{
-                                console.log(err)
+
+
+                    if (valid) {
+                        this.loading = true;
+                        this.$store
+                            .dispatch("login", this.loginForm)
+                            .then(response => {
+                                this.loading = false;
+                                let code = response.data.code;
+                                if (code == 200) {
+                                    this.$router.push({
+                                        path: "/Main",
+                                        query: {data: response.data.code}
+                                    });
+                                } else {
+                                    this.$router.push({
+                                        path: "/Login"
+                                    })
+                                }
                             })
-                            this.$router.push('/Main');
-                        }else{
-                            this.$message.error("账号密码错误")
-                            return false;
-                        }
-                    }else{
-                        this.$message.error("请填写账号密码")
+                            .catch(() => {
+                                this.loading = false;
+                            });
+
+                    }else {
+                        console.log("参数验证不合法");
+                        return false;
                     }
+
+
+                    // if (valid){
+                    //     if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
+                    //         this.$axios.get('/xxxx',{
+                    //             user:this.loginForm.username,
+                    //             pass:this.loginForm.password
+                    //         }).then(res=>{
+                    //             console.log("登录请求")
+                    //         }).catch(err=>{
+                    //             console.log(err)
+                    //         })
+                    //         this.$router.push('/Main');
+                    //     }else{
+                    //         this.$message.error("账号密码错误")
+                    //         return false;
+                    //     }
+                    // }else{
+                    //     this.$message.error("请填写账号密码")
+                    // }
                 });
             }
         }
@@ -95,7 +125,7 @@
         top: 50%;
         transform: translate(-50%,-50%);
     }
-    .avatar_box{
+    .head_box{
         height: 130px;
         width: 130px;
         border: 1px solid #eee;
