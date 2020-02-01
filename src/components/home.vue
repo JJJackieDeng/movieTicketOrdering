@@ -64,19 +64,26 @@
                                         <el-col :span="24" >
                                           <div  @click="toShowDetail()" class="movie-box show-bg-red display-block box-shadow box-radius" v-for="(item, index) in imgList" :key="index">
 
-                                              <img style="width: 100%; height: 100%;" :src="item.url"/>
+                                              <el-image
+                                                      style="width: 100%; height: 100%;"
+                                                      :src="item.url">
+                                              </el-image>
                                               <div >
                                                   <el-button type="primary" style="width: 100%" class="button">选座订票</el-button>
                                               </div>
                                               <span style="background-color:red;color:white;" >选座购票</span>
                                           </div>
-
-
-
                                         </el-col>
                                     </el-row>
                                 </div>
-
+<!--                                预览图片-->
+<!--                                <div class="demo-image__preview">-->
+<!--                                    <el-image-->
+<!--                                            style="width: 100px; height: 100px"-->
+<!--                                            :src="url"-->
+<!--                                            :preview-src-list="srcList">-->
+<!--                                    </el-image>-->
+<!--                                </div>-->
                                 <div >
                                     <el-row>
                                         <el-col :span="8">
@@ -88,7 +95,11 @@
 <!--                                                                                        </div>-->
 <!--                                                                                    </el-card>-->
                                             <el-card :body-style="{ padding: '0px' }" class="box-shadow box-radius m-10px p-10px" v-for="(item, index) in imgList" :key="index">
-                                                <img style="width: 100%; height: 100%;" :src="item.url"/>
+                                                <el-image
+                                                        style="width: 100%; height: 100%;"
+                                                        :src="item.url">
+
+                                                </el-image>
                                                 <div >
                                                     <el-button onmouseover="this.style.backgroundColor='red';" onmouseout="this.style.backgroundColor='';" type="primary" style="width: 100%" class="button" @click="toPurchaseDetail">选座订票</el-button>
                                                 </div>
@@ -96,7 +107,6 @@
                                         </el-col>
                                     </el-row>
                                 </div>
-
 
                             </el-main>
 
@@ -121,6 +131,11 @@
     export default {
         data(){
             return{
+                url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+                srcList: [
+                    'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
+                    'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
+                ],
                 currentDate: new Date(),
 
                 popularCinema:{

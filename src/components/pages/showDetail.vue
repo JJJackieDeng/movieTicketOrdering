@@ -12,7 +12,12 @@
                         <div >
                             <el-row :gutter="10">
                                  <el-col :span="8">
-                                     <img style="width: 400px;height: 550px" class="box-shadow movieDetail-box" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658">
+                                     <el-image
+                                             style="width: 400px;height: 550px"
+                                             class="box-shadow movieDetail-box"
+                                             src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658"
+                                             :preview-src-list="srcList">
+                                     </el-image>
                                  </el-col>
                                 <el-col>
 
@@ -28,7 +33,16 @@
 
 <script>
     export default {
-        name: "showDetail"
+        name: "showDetail",
+        data(){
+            return{
+                srcList: [
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658'
+
+                ],
+            }
+
+        }
     }
 </script>
 
