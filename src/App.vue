@@ -70,6 +70,13 @@ html, body{
     padding: 5px;
     background-color: #ffffff;
 }
+.movieDetail-box{
+    width: 20%;
+    height: 250px;
+    margin: 10px;
+    padding: 5px;
+    background-color: #ffffff;
+}
 
 .display-block{
     display: inline-block;

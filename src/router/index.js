@@ -47,6 +47,10 @@ const router = new VueRouter({
         {
             path: '/showDetail',
             component: showDetail
+        },
+        {
+            path: '/purchaseDetail',
+            component: purchaseDetail
         }
     ]
 });

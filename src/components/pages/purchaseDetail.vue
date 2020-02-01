@@ -1,5 +1,5 @@
 <template>
-    
+    <div>这是选座订票页面</div>
 </template>
 
 <script>

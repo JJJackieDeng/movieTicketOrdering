@@ -159,7 +159,7 @@
             },
             toPurchaseDetail(){
                 // this.$router.push({name:"showDetail",query:{goodsId:this.goodsId}})
-                this.$router.push({path:"showDetail"})
+                this.$router.push({path:"purchaseDetail"})
             },
             preview(index) {
                 this.$imagePreview({
