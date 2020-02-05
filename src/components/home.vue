@@ -6,32 +6,31 @@
 <!--                  -->
 <!--            </el-col>-->
             <el-col :span="16" :offset="4">
-
-
-
                 <el-container>
                     <el-header>
                         <div align="right" style="float:right">
+                            <el-button round @click="logout">主页</el-button>
                             <el-button round @click="logout">注销</el-button>
 
                         </div>
                     </el-header>
 
-
+<!--                    走马灯推荐电影-->
                     <el-carousel :interval="3000" type="card" height="250px" style="width: 100%;">
                         <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id">
                             <img :src="item.idView" class="">
                         </el-carousel-item>
                     </el-carousel>
 
-                    <el-container style="height: 55%;width: 420px;background-color: #ffffff">
+<!--                    <el-container style="height: 55%;width: 420px;background-color: #ffffff">-->
 
 
 
 
 
 
-                    </el-container>
+<!--                    </el-container>-->
+<!--                    电影，影院搜索-->
                     <el-container>
                         <el-aside width="200px">
                             <h1>热门影院</h1>
@@ -62,20 +61,21 @@
                                 <div>
                                     <el-row>
                                         <el-col :span="24" >
-                                          <div  @click="toShowDetail()" class="movie-box show-bg-red display-block box-shadow box-radius" v-for="(item, index) in imgList" :key="index">
+                                            <el-card  style="width: 160px;height: 240px" @click="toShowDetail()" class="movie-box show-bg-red display-block box-shadow box-radius" v-for="(item, index) in imgList" :key="index">
 
-                                              <el-image
-                                                      style="width: 100%; height: 100%;"
-                                                      :src="item.url">
-                                              </el-image>
-                                              <div >
-                                                  <el-button type="primary" style="width: 100%" class="button">选座订票</el-button>
-                                              </div>
-                                              <span style="background-color:red;color:white;" >选座购票</span>
-                                          </div>
+                                                <el-image
+                                                        style="width: 100%; height: 100%;"
+                                                        :src="item.url">
+                                                </el-image>
+                                                <el-button type="primary" style="width: 100%" class="button">选座订票</el-button>
+    <!--                                            <span style="background-color:red;color:white;" >选座购票</span>-->
+                                            </el-card>
                                         </el-col>
                                     </el-row>
                                 </div>
+
+
+
 <!--                                预览图片-->
 <!--                                <div class="demo-image__preview">-->
 <!--                                    <el-image-->
@@ -95,6 +95,43 @@
 <!--                                                                                        </div>-->
 <!--                                                                                    </el-card>-->
                                             <el-card :body-style="{ padding: '0px' }" class="box-shadow box-radius m-10px p-10px" v-for="(item, index) in imgList" :key="index">
+                                                <el-image @click="toShowDetail()"
+                                                        style="width: 100%; height: 100%;"
+                                                        :src="item.url">
+
+                                                </el-image>
+                                                <div >
+                                                    <el-button onmouseover="this.style.backgroundColor='red';" onmouseout="this.style.backgroundColor='';" type="primary" style="width: 100%" class="button" @click="toPurchaseDetail">选座订票</el-button>
+                                                </div>
+                                            </el-card>
+                                        </el-col>
+                                        <el-col :span="8">
+
+<!--                                                                                <el-card :body-style="{ padding: '0px' }" class="box-shadow box-radius m-10px p-10px">-->
+<!--                                                                                        <img src="../assets/img/hotsList/Movie1.jpg" class="image">-->
+<!--                                                                                        <div >-->
+<!--                                                                                            <el-button type="primary" style="width: 100%" class="button">选座订票</el-button>-->
+<!--                                                                                        </div>-->
+<!--                                                                                    </el-card>-->
+                                            <el-card :body-style="{ padding: '0px' }" class="box-shadow box-radius m-10px p-10px" v-for="(item, index) in imgList" :key="index">
+                                                <el-image
+                                                        style="width: 100%; height: 100%;"
+                                                        :src="item.url">
+
+                                                </el-image>
+                                                <div >
+                                                    <el-button onmouseover="this.style.backgroundColor='red';" onmouseout="this.style.backgroundColor='';" type="primary" style="width: 100%" class="button" @click="toPurchaseDetail">选座订票</el-button>
+                                                </div>
+                                            </el-card>
+                                        </el-col>                                        <el-col :span="8">
+
+<!--                                                                                <el-card :body-style="{ padding: '0px' }" class="box-shadow box-radius m-10px p-10px">-->
+<!--                                                                                        <img src="../assets/img/hotsList/Movie1.jpg" class="image">-->
+<!--                                                                                        <div >-->
+<!--                                                                                            <el-button type="primary" style="width: 100%" class="button">选座订票</el-button>-->
+<!--                                                                                        </div>-->
+<!--                                                                                    </el-card>-->
+                                            <el-card :body-style="{ padding: '0px' }" class="box-shadow box-radius m-10px p-10px" v-for="(item, index) in imgList" :key="index">
                                                 <el-image
                                                         style="width: 100%; height: 100%;"
                                                         :src="item.url">
@@ -105,6 +142,7 @@
                                                 </div>
                                             </el-card>
                                         </el-col>
+
                                     </el-row>
                                 </div>
 

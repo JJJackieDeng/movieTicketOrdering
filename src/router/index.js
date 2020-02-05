@@ -5,26 +5,11 @@ import home from "@/components/home";
 import Test from "@/components/Test";
 import showDetail from "@/components/pages/showDetail";
 import purchaseDetail from "@/components/pages/purchaseDetail";
+import manageHome from "@/components/manage/manageHome";
 
 
 Vue.use(VueRouter);
 
-// export default new VueRouter({
-//   routes:[
-//     {
-//       path: '/login',
-//       component: Login
-//     },
-//     {
-//       path: '/',
-//       redirect:'/login'
-//     },
-//     {
-//       path: '/home',
-//       component: home
-//     }
-//   ]
-// })
 const router = new VueRouter({
     routes:[
         {
@@ -34,7 +19,6 @@ const router = new VueRouter({
         {
             path: '/',
             component: home
-/*            redirect:'/Main'*/
         },
         {
             path: '/home',
@@ -51,6 +35,10 @@ const router = new VueRouter({
         {
             path: '/purchaseDetail',
             component: purchaseDetail
+        },
+        {
+            path: '/manageHome',
+            component: manageHome
         }
     ]
 });

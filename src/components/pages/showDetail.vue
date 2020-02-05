@@ -31,15 +31,15 @@
         <el-row>
             <el-col :span="16" :offset="4">
                 <el-container>
-                        <div>
                             <el-tabs v-model="activeName" @tab-click="handleClick">
                                 <el-tab-pane label="介绍" name="first">
-                                    该片讲述了承接自初代的5年之后。曾经的地球残疾军人杰克·萨利，如今已经是潘多拉星球纳美族一方部族的族长，并且与爱妻娜塔莉共同育有一对可爱的儿女，日子过得平淡而充实的故事
+                                    <p style="text-indent: 2em">该片讲述了承接自初代的5年之后。曾经的地球残疾军人杰克·萨利，如今已经是潘多拉星球纳美族一方部族的族长，
+                                        并且与爱妻娜塔莉共同育有一对可爱的儿女，日子过得平淡而充实的故事
+                                    </p>
                                 </el-tab-pane>
                                 <el-tab-pane label="演职人员" name="second">演职人员</el-tab-pane>
                                 <el-tab-pane label="相关图集" name="third">相关图集</el-tab-pane>
                             </el-tabs>
-                        </div>
                 </el-container>
             </el-col>
         </el-row>
