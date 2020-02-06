@@ -11,20 +11,28 @@
         <el-container>
             <el-aside width="250px">
                  <el-row class="tac">
-                <el-col :span="24">
+                <el-col>
+<!--                    default-active="2"-->
+<!--                    class="el-menu-vertical-demo"-->
+<!--                    @open="handleOpen"-->
+<!--                    @close="handleClose"-->
                     <el-menu
-                            default-active="2"
-                            class="el-menu-vertical-demo"
-                            @open="handleOpen"
-                            @close="handleClose"
-                            background-color="#545c64"
-                            text-color="#fff"
+                            background-color="#ffffff"
+                            text-color="#000000"
                             active-text-color="#ffd04b">
                         <el-submenu index="1">
+                            <!--一级菜单-->
                             <template slot="title">
                                 <i class="el-icon-location"></i>
                                 <span>用户管理</span>
                             </template>
+                             <!--二级菜单-->
+                            <el-menu-item index="1-1">
+                                <template slot="title">
+                                    <i class="el-icon-location"></i>
+                                    <span>用户管理</span>
+                                </template>
+                            </el-menu-item>
                             <el-menu-item-group>
                                 <template slot="title">分组一</template>
                                 <el-menu-item index="1-1">选项1</el-menu-item>
@@ -38,14 +46,21 @@
                                 <el-menu-item index="1-4-1">选项1</el-menu-item>
                             </el-submenu>
                         </el-submenu>
-                        <el-menu-item index="2">
-                            <i class="el-icon-menu"></i>
-                            <span slot="title">导航二</span>
-                        </el-menu-item>
-                        <el-menu-item index="3">
-                            <i class="el-icon-setting"></i>
-                            <span slot="title">导航三</span>
-                        </el-menu-item>
+
+<!--                        <el-menu-item index="2">-->
+<!--                            <i class="el-icon-menu"></i>-->
+<!--                            <span slot="title">电影管理</span>-->
+<!--                        </el-menu-item>-->
+
+<!--                        <el-menu-item index="3">-->
+<!--                            <i class="el-icon-setting"></i>-->
+<!--                            <span slot="title">订单管理</span>-->
+<!--                        </el-menu-item>-->
+
+<!--                        <el-menu-item index="4">-->
+<!--                            <i class="el-icon-setting"></i>-->
+<!--                            <span slot="title">影院管理</span>-->
+<!--                        </el-menu-item>-->
                     </el-menu>
                 </el-col>
             </el-row></el-aside>
@@ -69,20 +84,19 @@
 </script>
 
 <style scoped>
+    html,body,#app{
+        background-color: #0ea5ff;
+    }
     .el-header, .el-footer {
-        background-color: #ffffff;
-        color: #333;
+        background-color: #f5f6f6;
+        color: #000000;
         display: flex;
         justify-content: space-between;
         padding-left: 0;
         align-items: center;
-        > div {
-            display: flex;
-        }
     }
 
     .el-aside {
-        background-color: #D3DCE6;
         color: #333;
         text-align: center;
         line-height: 600px;
