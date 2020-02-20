@@ -1,27 +1,31 @@
 <template>
     <div>
+        WDNMD:{{dataInfo.userName}}
+        {{dataInfo.createTime}}
+        <el-button type="success" @click="add">+</el-button> <!--监听示例-->
         <el-row>
-            <el-col :span="16" :offset="4">
+            <el-col>
                <el-container>
                    <el-header>
-                        <div align="right" style="float:right">
+                        <div style="float:right;">
                             <el-button round @click="logout">注销</el-button>
                         </div>
                    </el-header>
                    <el-main class="showDetail-bgr" style="background-color: #dfe7f1">
                         <div >
                             <el-row :gutter="10">
-                                 <el-col :span="8">
+                                 <el-col span="8">
                                      <el-image
-                                             style="width: 400px;height: 550px"
-                                             class="box-shadow movieDetail-box"
+                                             style="width: 320px;height: 440px;margin-left: 200px"
+                                             class="box-shadow"
                                              src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658"
                                              :preview-src-list="srcList">
                                      </el-image>
                                  </el-col>
-                                <el-col>
-
-                                </el-col>
+                                <span style="margin-left: 80px;font-size: 30px;color: white;font-weight: bold">电影名字</span><br>
+                                <span style="margin-left: 80px;font-size: 30px;color: white;font-weight: bold">英文名</span><br>
+                                <span style="margin-left: 80px;font-size: 20px;color: white;">上映时间</span><br>
+                                <span style="margin-left: 80px;font-size: 20px;color: white;">地区</span>
                             </el-row>
                         </div>
                    </el-main>
@@ -47,6 +51,7 @@
 </template>
 
 <script>
+    import * as commonUrls from'../../api/commonUrls'
     export default {
         name: "showDetail",
         data() {
@@ -56,11 +61,34 @@
                     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658'
 
                 ],
+                id:1,
+                dataInfo:'',
             }
         },
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
+            },
+            //获取用户数据测试
+            getUserinfo(){
+              commonUrls.getInfo(1,'get').then(res=>{
+                  return res.json();
+              }).then(res=>{
+                  this.dataInfo = res;
+              }).catch(err=>{
+                  console.log(err)
+              })
+            },
+            add(){
+                this.id +=1;
+            }
+        },
+        mounted(){
+            this.getUserinfo();
+        },
+        watch:{
+            id(){
+                this.$message.success("!!监听！！id为"+this.id)  /*监听示例*/
             }
         }
     }
@@ -74,5 +102,8 @@
         background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#751489), to(#eff6fd));/*谷歌*/
         /*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#AC07BD), to(#f140f8));      !* Safari 4-5, Chrome 1-9*!*/
         /*background: -webkit-linear-gradient(top, #AC07BD, #f140f8);   !*Safari5.1 Chrome 10+*!*/
+    }
+    .el-header{
+        background-color: #ffffff;
     }
 </style>
