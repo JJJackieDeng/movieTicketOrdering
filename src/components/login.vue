@@ -49,6 +49,9 @@
                 this.$refs.loginFormRef.resetFields();
             },
             login(){
+                // this.$axios.post("http://localhost:8080/login",this.User).then(res=>{
+                //     alert(res.data);
+                // });
                 this.$refs.loginFormRef.validate((valid) => {
                     // if (!valid)  return;
                     // const {data: res}=await this.$http.post("login",this.loginForm);
@@ -59,52 +62,25 @@
                     // this.$router.push('/Main');
 
 
-                    if (valid) {
-                        this.loading = true;
-                        this.$store
-                            .dispatch("login", this.loginForm)
-                            .then(response => {
-                                this.loading = false;
-                                let code = response.data.code;
-                                if (code == 200) {
-                                    this.$router.push({
-                                        path: "/Main",
-                                        query: {data: response.data.code}
-                                    });
-                                } else {
-                                    this.$router.push({
-                                        path: "/Login"
-                                    })
-                                }
+
+                    if (valid){
+                        if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
+                            this.$axios.get('/xxxx',{
+                                user:this.loginForm.username,
+                                pass:this.loginForm.password
+                            }).then(res=>{
+                                console.log("登录请求")
+                            }).catch(err=>{
+                                console.log(err)
                             })
-                            .catch(() => {
-                                this.loading = false;
-                            });
-
-                    }else {
-                        console.log("参数验证不合法");
-                        return false;
+                            this.$router.push('/Main');
+                        }else{
+                            this.$message.error("账号密码错误")
+                            return false;
+                        }
+                    }else{
+                        this.$message.error("请填写账号密码")
                     }
-
-
-                    // if (valid){
-                    //     if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
-                    //         this.$axios.get('/xxxx',{
-                    //             user:this.loginForm.username,
-                    //             pass:this.loginForm.password
-                    //         }).then(res=>{
-                    //             console.log("登录请求")
-                    //         }).catch(err=>{
-                    //             console.log(err)
-                    //         })
-                    //         this.$router.push('/Main');
-                    //     }else{
-                    //         this.$message.error("账号密码错误")
-                    //         return false;
-                    //     }
-                    // }else{
-                    //     this.$message.error("请填写账号密码")
-                    // }
                 });
             }
         }

@@ -5,7 +5,14 @@ import home from "@/components/home";
 import Test from "@/components/Test";
 import showDetail from "@/components/pages/showDetail";
 import purchaseDetail from "@/components/pages/purchaseDetail";
+import dashboard from '@/components/manage/dashboard'
+import page1 from '@/components/manage/page1'
+import page2 from '@/components/manage/page2'
 import manageHome from "@/components/manage/manageHome";
+import user from "@/components/manage/user";
+import movieInfo from "@/components/manage/movieInfo";
+import movie from "@/components/manage/movie";
+import orders from "@/components/manage/orders";
 
 
 Vue.use(VueRouter);
@@ -16,6 +23,30 @@ Vue.use(VueRouter);
 export default new VueRouter({
         mode: 'history',
         routes:[
+            {
+                path: '/dashboard',
+                component: dashboard,
+                children:[
+                    {
+                        path: 'user',
+                        name:'user',
+                        component: user
+                    },
+                    {
+                        path: 'movie',
+                        name:'movie',
+                        component: movie
+                    },                    {
+                        path: 'movieInfo',
+                        name:'movieInfo',
+                        component: movieInfo
+                    },                    {
+                        path: 'orders',
+                        name:'orders',
+                        component: orders
+                    },
+                ]
+            },
             {
                 path: '/login',
                 component: Login
@@ -28,10 +59,10 @@ export default new VueRouter({
                 path: '/home',
                 component: home
             },
-            {
-                path: '/test',
-                component: Test
-            },
+            // {
+            //     path: '/test',
+            //     component: Test
+            // },
             {
                 path: '/showDetail',
                 component: showDetail
@@ -40,10 +71,34 @@ export default new VueRouter({
                 path: '/purchaseDetail',
                 component: purchaseDetail
             },
-            {
-                path: '/manageHome',
-                component: manageHome
-            }
+            // {
+            //     path: '/manageHome',
+            //     component: () => import(/* webpackChunkName: "home" */ '../components/manage/manageHome.vue'),
+            //     meta: { title: '系统管理' },
+            //     children: [
+            //         // {
+            //         //     path: '/user',
+            //         //     component: () => import(/* webpackChunkName: "dashboard" */ '../components/manage/user.vue'),
+            //         //     meta: { title: '用户管理' }
+            //         // },
+            //         {
+            //             path: '/orders',
+            //             component: () => import(/* webpackChunkName: "icon" */ '../components/manage/orders.vue'),
+            //             meta: { title: '订单管理' }
+            //         },
+            //         {
+            //             path: '/movie',
+            //             component: () => import(/* webpackChunkName: "table" */ '../components/manage/movie.vue'),
+            //             meta: { title: '电影管理' }
+            //         },
+            //         {
+            //             path: '/movieInfo',
+            //             component: () => import(/* webpackChunkName: "tabs" */ '../components/manage/movieInfo.vue'),
+            //             meta: { title: '电影信息管理' }
+            //         }
+            //         ]
+            //
+            // }
         ]
 
 
