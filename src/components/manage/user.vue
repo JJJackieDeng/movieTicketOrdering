@@ -1,18 +1,17 @@
 <template>
     <div class="user">
         <div>
-<!--            <el-breadcrumb separator-class="el-icon-arrow-right">-->
-<!--                <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>-->
-<!--                <el-breadcrumb-item>用户管理</el-breadcrumb-item>-->
-<!--            </el-breadcrumb>-->
+            <!--            <el-breadcrumb separator-class="el-icon-arrow-right">-->
+            <!--                <el-breadcrumb-item :to="{ path: '/dashboard' }">首页</el-breadcrumb-item>-->
+            <!--                <el-breadcrumb-item>用户管理</el-breadcrumb-item>-->
+            <!--            </el-breadcrumb>-->
         </div>
         <el-container>
 
             <el-main>
-                <ui>
-                    <el-button type="danger" plain="true">批量删除</el-button>
-
-                </ui>
+                <div>
+                    <el-button type="danger" plain>批量删除</el-button>
+                </div>
                 <el-select v-model="value4" clearable placeholder="请选择" style="width: 120px">
                     <el-option
                             v-for="item in options"
@@ -21,7 +20,8 @@
                             :value="item.value">
                     </el-option>
                 </el-select>
-                <div>                <el-input v-model="input" placeholder="请输入内容"></el-input>
+                <div>
+                    <el-input v-model="input" placeholder="请输入内容"></el-input>
                 </div>
                 <el-table
                         :data="tableData"
