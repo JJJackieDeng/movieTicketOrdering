@@ -3,16 +3,18 @@
         <div class="login_box">
             <!--头像区域-->
             <div class="head_box">
-                <img src="../assets/img/Luffy.jpg">
+                <img src="../assets/img/Luffy.jpg" alt>
                 <!--<img src="../assets/logo.png">-->
             </div>
             <!--登录表单区域-->
             <el-form ref="loginFormRef" :model='loginForm' :rules="loginFormRules" class="login_form">
                 <el-form-item prop="username">
-                    <el-input v-model="loginForm.username" prefix-icon="iconfont iconyonghu" placeholder="用户名"></el-input>
+                    <el-input v-model="loginForm.username" prefix-icon="iconfont iconyonghu"
+                              placeholder="用户名"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" prefix-icon="iconfont iconmima1" type="password" placeholder="密码"></el-input>
+                    <el-input v-model="loginForm.password" prefix-icon="iconfont iconmima1" type="password"
+                              placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
                     <el-button type="primary" @click="login">登录</el-button>
@@ -24,31 +26,33 @@
 </template>
 
 <script>
+    import * as Qs from "qs";
+
     export default {
-        data(){
-            return{
+        data() {
+            return {
                 //登录表单的数据绑定对象
-                loginForm:{
-                    username:'',
-                    password:''
+                loginForm: {
+                    username: '',
+                    password: ''
                 },
-                loginFormRules:{
-                    username:[
-                        {   required: true,message:"请输入用户名",trigger: "blur"},
-                        {min:3,max:11,message:"请输入3~11个字符",trigger: "blur"}
+                loginFormRules: {
+                    username: [
+                        {required: true, message: "请输入用户名", trigger: "blur"},
+                        {min: 3, max: 11, message: "请输入3~11个字符", trigger: "blur"}
                     ],
                     password: [
-                        {   required: true,message:"请输入密码",trigger: "blur"},
-                        {min:6,max:18,message: "密码长度不小于6且不超过18",trigger: "blur"}
+                        {required: true, message: "请输入密码", trigger: "blur"},
+                        {min: 6, max: 18, message: "密码长度不小于6且不超过18", trigger: "blur"}
                     ]
                 }
             };
         },
-        methods:{
-            resetLoginForm(){
+        methods: {
+            resetLoginForm() {
                 this.$refs.loginFormRef.resetFields();
             },
-            login(){
+            login() {
                 // this.$axios.post("http://localhost:8080/login",this.User).then(res=>{
                 //     alert(res.data);
                 // });
@@ -62,23 +66,31 @@
                     // this.$router.push('/Main');
 
 
-
-                    if (valid){
-                        if (this.loginForm.username=='dzq' && this.loginForm.password=='123456'){
-                            this.$axios.get('/xxxx',{
-                                user:this.loginForm.username,
-                                pass:this.loginForm.password
-                            }).then(res=>{
-                                console.log("登录请求")
-                            }).catch(err=>{
-                                console.log(err)
-                            })
-                            this.$router.push('/Main');
-                        }else{
-                            this.$message.error("账号密码错误")
-                            return false;
-                        }
-                    }else{
+                    if (valid) {
+                        fetch('/api/user/dologin',
+                            {
+                                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                                method: 'post',
+                                body: Qs.stringify({
+                                    userName: this.loginForm.username,
+                                    password: this.loginForm.password
+                                })
+                            }
+                        ).then(res => {
+                            return res.json();
+                        }).then(res => {
+                           if (res!=null){
+                               this.$message.success("登录成功");
+                               console.log(res)
+                           }else{
+                               this.$message.error("登录失败")
+                           }
+                        }).catch(err=>{
+                            console.log(err);
+                            //TODO 这个风格和我一样的
+                            this.$message.error("登录出现错误")
+                        })
+                    } else {
                         this.$message.error("请填写账号密码")
                     }
                 });
@@ -88,10 +100,11 @@
 </script>
 
 <style lang="scss" scoped>
-    .login_container{
-    background-color: #0052ff;
+    .login_container {
+        background-color: #0052ff;
     }
-    .login_box{
+
+    .login_box {
         background-color: #fff;
         width: 450px;
         height: 300px;
@@ -99,30 +112,33 @@
         position: absolute;
         left: 50%;
         top: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
     }
-    .head_box{
+
+    .head_box {
         height: 130px;
         width: 130px;
         border: 1px solid #eee;
         border-radius: 50%;
         position: absolute;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         padding: 10px;
         box-shadown: 0 0 10px #ddd;
-        img{
+
+        img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             background-color: #eeeeee;
             left: 50%;
-            transform: translate(-50%,-6%);
+            transform: translate(-50%, -6%);
             position: absolute;
-/*            transform: translate(-50%);*/
+            /*            transform: translate(-50%);*/
         }
     }
-    .login_form{
+
+    .login_form {
         position: absolute;
         bottom: 0;
         width: 100%;
@@ -130,7 +146,8 @@
         box-sizing: border-box;
 
     }
-    .btns{
+
+    .btns {
         display: flex;
         justify-content: flex-end;
     }
