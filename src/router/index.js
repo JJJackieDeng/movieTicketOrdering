@@ -13,6 +13,7 @@ import user from "@/components/manage/user";
 import movieInfo from "@/components/manage/movieInfo";
 import movie from "@/components/manage/movie";
 import orders from "@/components/manage/orders";
+import register from "../components/pages/register";
 
 
 Vue.use(VueRouter);
@@ -52,6 +53,10 @@ export default new VueRouter({
                 component: Login
             },
             {
+                path: '/register',
+                component: register
+            },
+            {
                 path: '/',
                 component: home
             },
@@ -71,34 +76,7 @@ export default new VueRouter({
                 path: '/purchaseDetail',
                 component: purchaseDetail
             },
-            // {
-            //     path: '/manageHome',
-            //     component: () => import(/* webpackChunkName: "home" */ '../components/manage/manageHome.vue'),
-            //     meta: { title: '系统管理' },
-            //     children: [
-            //         // {
-            //         //     path: '/user',
-            //         //     component: () => import(/* webpackChunkName: "dashboard" */ '../components/manage/user.vue'),
-            //         //     meta: { title: '用户管理' }
-            //         // },
-            //         {
-            //             path: '/orders',
-            //             component: () => import(/* webpackChunkName: "icon" */ '../components/manage/orders.vue'),
-            //             meta: { title: '订单管理' }
-            //         },
-            //         {
-            //             path: '/movie',
-            //             component: () => import(/* webpackChunkName: "table" */ '../components/manage/movie.vue'),
-            //             meta: { title: '电影管理' }
-            //         },
-            //         {
-            //             path: '/movieInfo',
-            //             component: () => import(/* webpackChunkName: "tabs" */ '../components/manage/movieInfo.vue'),
-            //             meta: { title: '电影信息管理' }
-            //         }
-            //         ]
-            //
-            // }
+
         ]
 
 

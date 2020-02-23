@@ -1,4 +1,5 @@
 <template>
+    <body id="poster">
     <div class="login_container">
         <div class="login_box">
             <!--头像区域-->
@@ -17,12 +18,22 @@
                               placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item class="btns">
+                    <span
+                            class="change"
+                    onmouseover="this.className='changed'"
+                    onmouseout="this.className='change'">注册新帐号</span>
                     <el-button type="primary" @click="login">登录</el-button>
                     <el-button type="info" @click="resetLoginForm" plain>重置</el-button>
+                    <span
+                            class="change"
+                            onmouseover="this.className='changed'"
+                            onmouseout="this.className='change'">忘记密码？</span>
                 </el-form-item>
             </el-form>
         </div>
     </div>
+    </body>
+
 </template>
 
 <script>
@@ -80,18 +91,18 @@
                             return res.json();
                         }).then(res => {
                            if (res!=null){
-                               this.$message.success("登录成功");
+                               this.$message.success("登录成功！");
                                console.log(res)
                            }else{
-                               this.$message.error("登录失败")
+                               this.$message.error("登录失败！")
                            }
                         }).catch(err=>{
                             console.log(err);
                             //TODO 这个风格和我一样的
-                            this.$message.error("登录出现错误")
+                            this.$message.error("登录出现了一点问题~")
                         })
                     } else {
-                        this.$message.error("请填写账号密码")
+                        this.$message.error("请填写正确的账号或密码")
                     }
                 });
             }
@@ -100,6 +111,18 @@
 </script>
 
 <style lang="scss" scoped>
+    #poster{
+        background: url("../assets/img/Luffy2.jpg") no-repeat center;
+        height: 100%;
+        width: 100%;
+
+    }
+    .change{
+        color: #cecece;
+    }
+    .changed{
+        color: #0ea5ff;
+    }
     .login_container {
         background-color: #0052ff;
     }
@@ -149,6 +172,7 @@
 
     .btns {
         display: flex;
+        text-align: center;
         justify-content: flex-end;
     }
 </style>

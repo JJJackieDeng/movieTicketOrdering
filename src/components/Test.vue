@@ -41,7 +41,7 @@
 <!--                        v-if="seatArray.length>0"-->
 
                         <div v-for="(col,index) in seatCol"
-                             v-if="seatArray.length>0"
+                             v-show="seatArray.length>0"
                              class="seat"
                              :style="{width:seatSize+'px',height:seatSize+'px'}"
                              :key="index">
