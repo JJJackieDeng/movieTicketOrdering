@@ -64,10 +64,10 @@ export default new VueRouter({
                 path: '/home',
                 component: home
             },
-            // {
-            //     path: '/test',
-            //     component: Test
-            // },
+            {
+                path: '/test',
+                component: Test
+            },
             {
                 path: '/showDetail',
                 component: showDetail

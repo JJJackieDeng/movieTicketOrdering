@@ -11,17 +11,15 @@
             <el-main>
                 <div>
                     <el-button type="danger" plain>批量删除</el-button>
-                </div>
-                <el-select v-model="value4" clearable placeholder="请选择" style="width: 120px">
-                    <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-                <div>
-                    <el-input v-model="input" placeholder="请输入内容"></el-input>
+                    <el-select v-model="value4" clearable placeholder="请选择" style="width: 120px">
+                        <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-input v-model="input" placeholder="请输入内容" style="width: 150px"></el-input>
                 </div>
                 <el-table
                         :data="tableData"
@@ -33,7 +31,7 @@
                             width="100px">
                     </el-table-column>
                     <el-table-column
-                            prop="name"
+                            prop="userName"
                             label="用户名"
                             width="100px">
                     </el-table-column>
@@ -70,6 +68,8 @@
 </template>
 
 <script>
+    import * as CommonUrls from '../../api/commonUrls'
+
     export default {
         name: "user",
         data() {
@@ -86,38 +86,31 @@
                     label: '手机号码'
                 }],
                 value4: '',
-                tableData: [{
-                    id: '1',
-                    name: '王小虎',
-                    password: '上海市普陀区金沙江路 1518 弄',
-                    phoneNumber: '15975403320',
-                    createTime: '2020-02-22-16:40:00',
-                    modifiedTime: ''
-                }, {
-                    id: '2',
-                    name: '李云龙',
-                    password: '上海市普陀区金沙江路 1518 弄',
-                    phoneNumber: '15975403320',
-                    createTime: '2020-02-22-16:40:00',
-                    modifiedTime: ''
-                }, {
-
-                    id: '3',
-                    name: '加拿大电鳗',
-                    password: '上海市普陀区金沙江路 1518 弄',
-                    phoneNumber: '15975403320',
-                    createTime: '2020-02-22-16:40:00',
-                    modifiedTime: '2020-02-22-16:40:05'
-                }, {
-
-                    id: '4',
-                    name: '王小虎',
-                    password: '上海市普陀区金沙江路 1518 弄',
-                    phoneNumber: '15975403320',
-                    createTime: '2020-02-22-16:40:00',
-                    modifiedTime: ''
-                }]
+                tableData: [],
+                limit: 10, // 自己改变
+                offset: 1, //
             }
+        },
+        methods: {
+            GetTableData() {
+                CommonUrls.getAllUsers({
+                    limit: this.limit,
+                    offset: this.offset,
+                }, 'get').then(res => {
+                    return res.json();
+                }).then(res => {
+                    // if (res.code === 200) {
+                        this.tableData = res;
+                    // } else {
+                    //     console.log("获取数据失败")
+                    // }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        mounted(){
+            this.GetTableData();
         }
     }
 </script>
