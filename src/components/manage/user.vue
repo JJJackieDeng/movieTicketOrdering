@@ -10,17 +10,19 @@
 
             <el-main>
                 <div>
-                    <el-button type="danger" plain>批量删除</el-button>
-                    <!--todo value4待修改-->
-                    <el-select v-model="value4" clearable placeholder="请选择" style="width: 120px">
-                        <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                    <el-input v-model="input" placeholder="请输入内容" style="width: 150px"></el-input>
+<!--                    <el-button type="danger" plain>批量删除</el-button>-->
+                    <el-form
+                            ref="searchForm"
+                            :inline="true"
+                            :model="searchMap"
+                            style="margin-top: 20px;margin-left: 0px">
+                        <el-form-item prop="companyName">
+                            <el-input>
+                                <template slot="prepend">用户名</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-button icon="el-icon-search"></el-button>
+                    </el-form>
                 </div>
                 <el-table
                         :data="tableData"
@@ -90,8 +92,17 @@
                         <el-button type="success" @click="dialogVisible = true">修改</el-button>
                         <el-button type="danger" @click="toDelete">删除</el-button>
                     </el-table-column>
-
                 </el-table>
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[5,10,20,30]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="total"
+                ></el-pagination>
+
             </el-main>
 
         </el-container>
@@ -128,10 +139,19 @@
                 value4: '',
                 tableData: [],
                 limit: 10, // todo ,每页查询多少个
-                offset: 1, //todo 分多少页，需要前端传入
+                offset: 0, //todo 从第一个开始查
             }
         },
         methods: {
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+                this.limit = val;
+            },
+            // 当页码改变后，被触发，val是最新的页码
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                this.offset = val;
+            },
             /*处理弹窗界面*/
             handleClose(done) {
                 this.$confirm('确认关闭？')
