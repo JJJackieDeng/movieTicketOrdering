@@ -29,6 +29,11 @@ export default new VueRouter({
                 component: dashboard,
                 children:[
                     {
+                        path:'manageHome',
+                        name: 'manageHome',
+                        component: manageHome
+                    },
+                    {
                         path: 'user',
                         name:'user',
                         component: user
