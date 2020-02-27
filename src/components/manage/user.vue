@@ -10,7 +10,7 @@
 
             <el-main>
                 <div>
-<!--                    <el-button type="danger" plain>批量删除</el-button>-->
+                    <!--                    <el-button type="danger" plain>批量删除</el-button>-->
                     <el-form
                             ref="searchForm"
                             :inline="true"
@@ -45,7 +45,8 @@
                     </el-table-column>
                     <el-table-column
                             prop="password"
-                            label="密码">
+                            label="密码"
+                            width="150">
                     </el-table-column>
                     <el-table-column
                             prop="phoneNumber"
@@ -60,7 +61,7 @@
                             prop="modifiedTime"
                             label="修改时间">
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column label="操作" width="200px">
                         <el-dialog
                                 title="用户修改"
                                 :visible.sync="dialogVisible"
@@ -120,7 +121,7 @@
                 dialogVisible: false,
                 input: '',
                 /*用户数据修改*/
-                userForm:{
+                userForm: {
                     userName: '',
                     sex: '',
                     password: '',
@@ -136,9 +137,8 @@
                 //     value: '选项3',
                 //     label: '手机号码'
                 // }],
-                value4: '',
                 tableData: [],
-                limit: 10, // todo ,每页查询多少个
+                limit: 100, // todo ,每页查询多少个
                 offset: 0, //todo 从第一个开始查
             }
         },
@@ -158,9 +158,10 @@
                     .then(_ => {
                         done();
                     })
-                    .catch(_ => {});
+                    .catch(_ => {
+                    });
             },
-            toDelete(){
+            toDelete() {
                 this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -186,7 +187,7 @@
                     return res.json();
                 }).then(res => {
                     // if (res.code === 200) {
-                        this.tableData = res;
+                    this.tableData = res;
                     // } else {
                     //     console.log("获取数据失败")
                     // }
@@ -195,7 +196,7 @@
                 })
             }
         },
-        mounted(){
+        mounted() {
             this.GetTableData();
         }
     }
