@@ -1,7 +1,8 @@
 import * as QS from "qs";
 import axios from 'axios'
-
+/**get*/
 let header = {'Content-Type': 'application/json'};
+/*post*/
 let header2 ={'Content-Type': 'application/x-www-form-urlencoded'};
 
 // let host = window.g.ApiUrl

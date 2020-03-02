@@ -92,7 +92,10 @@
             }
         },
         mounted() {
-            this.$router.push('/dashboard/manageHome')
+            this.$router.push('/dashboard/manageHome');
+        },
+        created() {
+                this.$emit('Header', false);
         }
     }
 </script>
