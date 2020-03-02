@@ -1,34 +1,49 @@
 <template>
+    <body id="poster">
     <div class="registerContainer">
         <div class="registerBox">
-            <el-form :model="ruleForm" status-icon :rules="rules2" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="用户名" prop="userName">
-                    <el-input type="text" v-model="ruleForm.username" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input type="password" v-model="ruleForm.password" auto-complete="off" placeholder="请输入6~18个字符"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="checkPass">
-                    <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="性别" prop="">
-                    <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
-                    <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
-                </el-form-item>
-                <el-form-item label="手机号码" prop="phoneNumber">
-                    <el-input v-model.number="ruleForm.phoneNumber"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
-                </el-form-item>
-            </el-form>
+            <el-container>
+                <el-main>
+                    <el-form :model="ruleForm" status-icon :rules="rules2" ref="ruleForm" label-width="100px"
+                             class="demo-ruleForm">
+                        <el-form-item label="用户名" prop="userName">
+                            <el-input type="text" v-model="ruleForm.userName" auto-complete="off"
+                                      @input="userNameLimit"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" prop="password">
+                            <el-input
+                                    type="password"
+                                    v-model="ruleForm.password"
+                                    auto-complete="off"
+                                    placeholder="请输入6~18个字符"
+                                    @input="userPasswordLimit">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="性别" prop="">
+                            <el-radio v-model="ruleForm.sex" label="1">男</el-radio>
+                            <el-radio v-model="ruleForm.sex" label="2">女</el-radio>
+                        </el-form-item>
+                        <el-form-item label="手机号码" prop="phoneNumber">
+                            <el-input v-model.number="ruleForm.phoneNumber"></el-input>
+                        </el-form-item>
+                        <el-form-item style="text-align: center">
+                            <el-button type="primary" @click="register">提交</el-button>
+                            <el-button @click="resetForm()">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-main>
+            </el-container>
         </div>
     </div>
-
+    </body>
 </template>
 
 <script>
+    import * as Qs from "qs";
+
     export default {
         name: "register",
         data() {
@@ -68,8 +83,9 @@
                 }
             };
             return {
+                responseResult: '',
                 ruleForm: {
-                    userName:'',
+                    userName: '',
                     password: '',
                     checkPass: '',
                     phoneNumber: '',
@@ -77,40 +93,66 @@
                 },
                 rules2: {
                     pass: [
-                        { validator: validatePass, trigger: 'blur' }
+                        {validator: validatePass, trigger: 'blur'}
                     ],
                     checkPass: [
-                        { validator: validatePass2, trigger: 'blur' }
+                        {validator: validatePass2, trigger: 'blur'}
                     ],
                     checkPhoneNumber: [
-                        { validator: checkPhoneNumber, trigger: 'blur' }
+                        {validator: checkPhoneNumber, trigger: 'blur'}
                     ]
                 }
             };
         },
         methods: {
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        alert('submit!');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
+            register() {
+                this.$refs.ruleForm.validate((valid) => {
+                    if (valid){
+                        fetch('/api/user/add',
+                            {
+                                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                                method: 'post',
+                                body: Qs.stringify({
+                                    userName: this.ruleForm.userName,
+                                    password: this.ruleForm.password,
+                                    sex: this.ruleForm.sex,
+                                    phoneNumber: this.ruleForm.phoneNumber
+                                })
+                            }
+                        ).then(res=>{
+                            return res.json();
+                        }).then(data => {
+                                if (data.code === 200) {
+                                    this.$message.success("注册成功！请登录")
+                                    this.$router.push({path: '/login'})
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                this.$message("注册失败！请再试一下")
+                            })
                     }
-                });
-            },
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
+                })
+
             }
         }
     }
+
+
 </script>
 
 <style scoped>
+    #poster {
+        background: url("../../assets/img/Luffy2.jpg") no-repeat center;
+        height: 100%;
+        width: 100%;
+
+    }
+
     .registerBox {
         background-color: #ffffff;
         width: 600px;
-        height: 300px;
+        height: 400px;
         border-radius: 3px;
         position: absolute;
         left: 50%;
