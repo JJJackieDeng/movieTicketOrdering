@@ -1,11 +1,7 @@
 <template>
-    <el-container>
-        <el-header>
-            <div style="float:right;">
-                <el-button round @click="logout">注销</el-button>
-            </div>
-        </el-header>
+        <!--todo 左边显示座位选择，右边显示-->
         <div class="wrapper">
+
             <div class="cinema-wrapper">
                 <h1 class="title">选座订票</h1>
                 <div class="btn-wrapper">
@@ -63,8 +59,6 @@
                 </div>
             </div>
         </div>
-    </el-container>
-
 </template>
 
 <script>

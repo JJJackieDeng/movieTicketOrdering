@@ -11,7 +11,12 @@
                                 </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item icon="el-icon-user" split-button="true">
-                                <span @click="logout">注销</span><br>
+                                <span @click="logout">注销</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item icon=" " split-button="true">
+                                <span @click="toLogin">修改资料</span>
+                            </el-dropdown-item>
+                            <el-dropdown-item icon=" " split-button="true">
                                 <span @click="toLogin">我的订单</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
@@ -38,7 +43,11 @@
     .el-header {
         background-color: #000000;
         color: #ffffff;
-        text-align: center;
+        text-align: right;
         line-height: 60px;
+        /*position: absolute;*/
+        right: 20px;
+        vertical-align: middle;
+        align-items: center;
     }
 </style>

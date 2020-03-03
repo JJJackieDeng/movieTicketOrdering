@@ -1,97 +1,54 @@
 <template>
-    <div>
+    <div class="homeIndex">
+        <!--                    走马灯推荐电影-->
+        <div class="carousel">
+            <el-carousel
+                    :interval="3000"
+                    type="card"
+                    height="300px">
+                <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id">
+                    <img :src="item.idView" class="carousel_pic"
+                         alt="图片被外星人偷走了">
+                </el-carousel-item>
+            </el-carousel>
+        </div>
+        <div class="mainContent">
+            <div class="leftSide">
+                <h1>热门影院</h1>
+                <el-form>
+                    <el-form-item>
+                        <el-input v-model="popularCinema.address" prefix-icon="el-icon-search"></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-footer>叶问4：完结篇</el-footer>
+            </div>
+            <div class="rightSide">
+                <el-row>
+                    <el-col v-for="(item, index) in imgList" :key="index" style="width: 300px">
+                        <el-card :body-style="{ padding: '0px' }"
+                                 class="box-shadow box-radius m-10px"
+                        >
+                            <el-image @click="toShowDetail()"
+                                      style="width: 300px; height: 400px;"
+                                      :src="item.url">
 
-        <el-row>
-            <!--            <el-col :span="4" class="show-bg-blue" >-->
-            <!--                  -->
-            <!--            </el-col>-->
-            <el-col :span="16" :offset="4">
-                <el-container>
-                    <el-header>
-                        <div align="right" style="float:right">
-                            <el-button round @click="toHome">主页</el-button>
-                            <el-button round @click="logout">注销</el-button>
-
-                        </div>
-                    </el-header>
-
-<!--                    走马灯推荐电影-->
-                        <el-carousel 
-                                :interval="3000"
-                                type="card"
-                                height="250px"
-                                style="width: 700px;">
-                            <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id" style="width: 300px">
-                                <img :src="item.idView" class="" style="background-size: cover;width: 100%;height: 100%" alt="图片被外星人偷走了">
-                            </el-carousel-item>
-                        </el-carousel>
-
-
-
-                    电影，影院搜索
-                    <el-container>
-                        <el-aside width="200px">
-                            <h1>热门影院</h1>
-                            <el-form>
-                                <el-form-item>
-                                    <el-input v-model="popularCinema.address" prefix-icon="el-icon-search"></el-input>
-                                </el-form-item>
-                            </el-form>
-                            <el-footer>叶问4：完结篇</el-footer>
-                            <el-footer>2</el-footer>
-                            <el-footer>3Footer</el-footer>
-                            <el-footer>4Footer</el-footer>
-                            <el-footer>5Footer</el-footer>
-                            <el-footer>6Footer</el-footer>
-                            <el-footer>7Footer</el-footer>
-                            <el-footer>Footer</el-footer>
-                            <el-footer>Footer</el-footer>
-                            <el-footer>Footer</el-footer>
-                        </el-aside>
-                        <el-container>
-                            <el-main>
-                                <div>
-                                    <el-row>
-                                        <el-col :span="8" v-for="(item, index) in imgList" :key="index">
-                                            <el-card :body-style="{ padding: '0px' }"
-                                                     class="box-shadow box-radius m-10px"
-                                                     >
-                                                <el-image @click="toShowDetail()"
-                                                          style="width: 300px; height: 400px;"
-                                                          :src="item.url">
-
-                                                </el-image>
-                                                <div style="width: 300px">
-                                                    <el-button
-                                                            onmouseover="this.style.backgroundColor='red';"
-                                                            onmouseout="this.style.backgroundColor='';"
-                                                            type="primary"
-                                                            style="width: 300px"
-                                                            class="button"
-                                                            @click="toPurchaseDetail">选座订票
-                                                    </el-button>
-                                                </div>
-                                            </el-card>
-                                        </el-col>
-                                    </el-row>
-                                </div>
-
-                            </el-main>
-
-
-                            <el-footer>Footer</el-footer>
-                        </el-container>
-                    </el-container>
-                </el-container>
-
-
-            </el-col>
-            <el-col :span="4">
-                <pre> </pre>
-            </el-col>
-        </el-row>
-
-
+                            </el-image>
+                            <div style="width: 300px">
+                                <el-button
+                                        onmouseover="this.style.backgroundColor='red';"
+                                        onmouseout="this.style.backgroundColor='';"
+                                        type="primary"
+                                        style="width: 300px"
+                                        class="button"
+                                        @click="toPurchaseDetail">选座订票
+                                </el-button>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="clearfix"></div>
+        </div>
     </div>
 </template>
 
@@ -116,6 +73,7 @@
                     {id: 2, idView: require('../assets/img/hotsList/Movie3.jpg')},
                     {id: 3, idView: require('../assets/img/hotsList/Movie4.jpg')},
                     {id: 4, idView: require('../assets/img/hotsList/Movie5.jpg')},
+                    {id: 5, idView: require('../assets/img/hotsList/Movie5.jpg')},
                 ],
 
 
@@ -146,11 +104,6 @@
 
         },
         methods: {
-            logout() {
-                /*清空缓存并重定向登录页面*/
-                sessionStorage.clear();
-                this.$router.push("/login")
-            },
             toShowDetail() {
                 // this.$router.push({name:"showDetail",query:{goodsId:this.goodsId}})
                 this.$router.push({path: "showDetail"})
@@ -170,55 +123,63 @@
                     index: index,
                 })
             }
+        },
+        created: {
+            /*false为不显示头部*/
+
         }
 
     }
 </script>
 
 <style lang="scss" scoped>
-    html, body, #app, .el-container {
-        /*设置内部填充为0，几个布局元素之间没有间距*/
-        padding: 0px;
-        /*外部间距也是如此设置*/
-        margin: 0px;
-        /*统一设置高度为100%*/
-        height: 100%;
-
-
-    }
-
-    .el-header, .el-footer {
+    .homeIndex {
         background-color: #ffffff;
-        color: #000;
-        text-align: center;
-        line-height: 60px;
+
+        .carousel {
+            width: 70%;
+            margin: 0 auto;
+            height: 300px;
+
+            .carousel_pic {
+                width: 100%;
+                height: 100%;
+                background-position: center center;
+                background-size: cover;
+            }
+        }
+
+        .mainContent {
+            width: 100%;
+            margin-top: 50px;
+
+            .leftSide {
+                padding: 20px 0 0 20px;
+                width: 20vw;
+                float: left;
+                background-color: #fffdf5;
+            }
+
+            .rightSide {
+                padding: 20px 20px;
+                width: 75vw;
+                float: right;
+            }
+        }
     }
 
-    .el-aside {
-        background-color: #eff6fd;
-        color: #333;
-        /*text-align: left;*/
-        line-height: 5px;
-    }
 
-    .el-main {
-        background-color: #ffffff;
-        color: #333;
-        /*text-align: left;*/
-        /*line-height: 160px;*/
-    }
+    /*.showItem {*/
+    /*    display: inline-block;*/
+    /*    width: 180px;*/
+    /*    height: 250px;*/
+    /*    margin: 10px 0px 10px 60px;*/
+    /*    background-color: #fffdf5;*/
+    /*    border-radius: 5px;*/
+    /*    !*text-align: center;*!*/
+    /*    padding-top: 5px;*/
 
-    .showItem {
-        display: inline-block;
-        width: 180px;
-        height: 250px;
-        margin: 10px 0px 10px 60px;
-        background-color: #fffdf5;
-        border-radius: 5px;
-        /*text-align: center;*/
-        padding-top: 5px;
-
-    }
+    /*}*/
 
     .el-carousel__item h3 {
         color: #475669;
@@ -236,5 +197,16 @@
         background-color: #d3dce6;
     }
 
+    .el-carousel__item--card {
+        width: 30% !important;
+    }
 
+
+</style>
+<style lang="scss">
+    .homeIndex {
+        .el-carousel__container {
+            margin-left: 130px !important;
+        }
+    }
 </style>
