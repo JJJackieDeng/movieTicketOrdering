@@ -12,28 +12,39 @@
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="name"
-                            label="用户名"
+                            prop="movieInfo.poster"
+                            label="电影海报"
+                            width="180">
+                        <img src="" alt="">
+                    </el-table-column>
+                    <el-table-column
+                            prop="movieName"
+                            label="电影名称"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="password"
-                            label="密码"
+                            prop="movieInfo.introduce"
+                            label="电影简介"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="phoneNumber"
-                            label="手机号码"
+                            prop="movieInfo.director"
+                            label="导演"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="createTime"
-                            label="创建时间"
+                            prop="movieInfo.actors"
+                            label="演员"
                             width="180">
                     </el-table-column>
                     <el-table-column
-                            prop="modifiedTime"
-                            label="修改时间"
+                            prop="movieInfo.movieLength"
+                            label="电影时长"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="movieInfo.release"
+                            label="上映时间"
                             width="180">
                     </el-table-column>
                 </el-table>
@@ -44,11 +55,48 @@
 </template>
 
 <script>
+    import * as CommonUrls from '../../api/commonUrls'
+
     export default {
         name: "movie",
         data() {
             return {
+                input: '',
+                movieForm: {
+                    poster: '',
+                    movieName: '',
+                    introduce: '',
+                    director: '',
+                    actors: '',
+                    movieLength: '',
+                    release: '',
+                },
+                tableData: [],
+                limit: 100, // todo ,每页查询多少个
+                offset: 0, //todo 从第一个开始查
             }
+        },
+        methods: {
+            GetTableData() {
+                CommonUrls.getAllMovie({
+                    limit: this.limit,
+                    offset: this.offset,
+                }, 'get').then(res => {
+                    return res.json();
+                }).then(res => {
+                    // if (res.code === 200) {
+                    this.tableData = res;
+
+                    // } else {
+                    //     console.log("获取数据失败")
+                    // }
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        mounted() {
+            this.GetTableData();
         }
     }
 </script>
