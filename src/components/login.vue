@@ -21,7 +21,7 @@
                     <span
                             class="change"
                     onmouseover="this.className='changed'"
-                    onmouseout="this.className='change'">注册新帐号</span>
+                    onmouseout="this.className='change'" @click="toRegister">注册新帐号</span>
                     <el-button type="primary" @click="login">登录</el-button>
                     <el-button type="info" @click="resetLoginForm" plain>重置</el-button>
                     <span
@@ -68,15 +68,6 @@
                 //     alert(res.data);
                 // });
                 this.$refs.loginFormRef.validate((valid) => {
-                    // if (!valid)  return;
-                    // const {data: res}=await this.$http.post("login",this.loginForm);
-                    // if(res.meta.status !==200) return this.$message.error("登录失败");
-                    // this.$message.success("登录成功"); //2019年12月25日23:44:57 meta.status未设置正常，因此提示失败
-                    // window.sessionStorage.setItem("token",res.meta.token);
-                    // /*到主页面*/
-                    // this.$router.push('/Main');
-
-
                     if (valid) {
                         fetch('/api/user/dologin',
                             {
@@ -92,19 +83,22 @@
                         }).then(res => {
                            if (res!=null){
                                this.$message.success("登录成功！");
-                               console.log(res)
+                               console.log(res);
+                               this.$router.replace({path: '/home'})
                            }else{
                                this.$message.error("登录失败！")
                            }
                         }).catch(err=>{
                             console.log(err);
-                            //TODO 这个风格和我一样的
                             this.$message.error("登录出现了一点问题~")
                         })
                     } else {
                         this.$message.error("请填写正确的账号或密码")
                     }
                 });
+            },
+            toRegister(){
+                this.$router.push({path:"/register"})
             }
         }
     };
@@ -112,7 +106,8 @@
 
 <style lang="scss" scoped>
     #poster{
-        background: url("../assets/img/Luffy2.jpg") no-repeat center;
+        /*background: url("../assets/img/Luffy2.jpg") no-repeat center;*/
+        background: url("../assets/img/Xujinjiang.jpg") no-repeat center;
         height: 100%;
         width: 100%;
 
