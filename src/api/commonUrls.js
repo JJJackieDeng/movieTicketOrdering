@@ -27,3 +27,7 @@ export function getAllUsers(body, methods) {
 export function getALLOrders(body, methods) {
     return fetch('/api/order/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
 }
+
+export  function getAllMovie(body,methods) {
+    return fetch('/api/movie/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
+}

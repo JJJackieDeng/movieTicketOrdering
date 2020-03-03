@@ -55,19 +55,21 @@
                     </el-table-column>
                     <el-table-column
                             prop="createTime"
-                            label="创建时间">
+                            label="创建时间"
+                            >
                     </el-table-column>
                     <el-table-column
                             prop="modifiedTime"
                             label="修改时间">
                     </el-table-column>
+
                     <el-table-column label="操作" width="200px">
                         <el-dialog
                                 title="用户修改"
                                 :visible.sync="dialogVisible"
                                 width="30%"
                                 :before-close="handleClose">
-                            <el-form ref="form" :model="form" label-width="80px">
+                            <el-form ref="form" :model="tableData" label-width="80px">
                                 <el-form-item label="用户名" prop="userName">
                                     <el-input type="text" v-model="userForm.userName"></el-input>
                                 </el-form-item>
@@ -90,10 +92,12 @@
                                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
                             </span>
                         </el-dialog>
-                        <el-button type="success" @click="dialogVisible = true">修改</el-button>
+                        <el-button type="success" @click="openGet">修改</el-button>
                         <el-button type="danger" @click="toDelete">删除</el-button>
                     </el-table-column>
                 </el-table>
+
+                <!--分页值的输入-->
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
@@ -103,6 +107,33 @@
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="total"
                 ></el-pagination>
+                <!--修改用户信息-->
+                <div v-if="flag" class="getInfo1">
+                    <h2>用户信息修改</h2>
+                    <div class="update">
+                        <el-form ref="form" :model="updateUser" label-width="80px">
+                            <el-form-item label="用户名">
+                                <el-input v-model="updateUser.userName"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码">
+                                <el-input v-model="updateUser.password"></el-input>
+                            </el-form-item>
+                            <el-form-item label="性别">
+                                <el-input v-model="updateUser.sex"></el-input>
+                            </el-form-item>
+                            <el-form-item label="手机号码">
+                                <el-input v-model="updateUser.phoneNumber"></el-input>
+                            </el-form-item>
+
+                            <div class="addButton">
+                                <el-form-item>
+                                    <el-button type="primary" @click="update()">提交</el-button>
+                                    <el-button @click="closeGet()">取消</el-button>
+                                </el-form-item>
+                            </div>
+                        </el-form>
+                    </div>
+                </div>
 
             </el-main>
 
@@ -117,26 +148,26 @@
         name: "user",
         data() {
             return {
-                /**关闭修改弹窗*/
-                dialogVisible: false,
                 input: '',
-                /*用户数据修改*/
+                /*用户数据获取*/
                 userForm: {
+                    id: '',
                     userName: '',
                     sex: '',
                     password: '',
                     phoneNumber: '',
                 },
-                // options: [{
-                //     value: '选项1',
-                //     label: 'ID'
-                // }, {
-                //     value: '选项2',
-                //     label: '用户名'
-                // }, {
-                //     value: '选项3',
-                //     label: '手机号码'
-                // }],
+                /*修改用户数据*/
+                updateUser: {
+                    id:'',
+                    userName: '',
+                    sex: '',
+                    password: '',
+                    phoneNumber: '',
+                },
+                /*是否修改用户信息，默认为否*/
+                flag: false,
+
                 tableData: [],
                 limit: 100, // todo ,每页查询多少个
                 offset: 0, //todo 从第一个开始查
@@ -151,6 +182,42 @@
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
                 this.offset = val;
+            },
+            /*修改用户信息窗口*/
+            openGet() {
+                /*todo 这里的id该如何获取*/
+                if (this.updateUser.id) {
+                    this.flag = !this.flag;
+                } else {
+                    this.$message("请选择一条数据");
+                }
+            },
+            closeGet() {
+                this.flag = !this.flag;
+                this.$message("已取消操作");
+            },
+            /*确认修改*/
+            update() {
+                let _this = this;
+                    fetch("/user/update", {
+                        id: _this.updateUser.id,
+                        userName: _this.updateUser.userName,
+                        sex: _this.updateUser.sex,
+                        password: _this.updateUser.password,
+                        phoneNumber: _this.updateUser.phoneNumber
+                    })
+                    .then(res => {
+                        if (res.data.code === 200) {
+                            this.$message("提交成功");
+                            this.flag = !this.flag;
+                            this.reload();
+                        }
+                    })
+                    .catch(function (err) {
+                        if (err.response) {
+                            console.log(err.response);
+                        }
+                    });
             },
             /*处理弹窗界面*/
             handleClose(done) {
@@ -203,5 +270,18 @@
 </script>
 
 <style scoped>
-
+    .getInfo1 {
+        position: absolute;
+        z-index: 1001;
+        width: 400px;
+        height: 490px;
+        left: 0;
+        top: -50px;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+    }
 </style>

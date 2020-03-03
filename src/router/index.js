@@ -6,8 +6,6 @@ import Test from "@/components/Test";
 import showDetail from "@/components/pages/showDetail";
 import purchaseDetail from "@/components/pages/purchaseDetail";
 import dashboard from '@/components/manage/dashboard'
-import page1 from '@/components/manage/page1'
-import page2 from '@/components/manage/page2'
 import manageHome from "@/components/manage/manageHome";
 import user from "@/components/manage/user";
 import movieInfo from "@/components/manage/movieInfo";

@@ -6,6 +6,9 @@ import './assets/css/global.css'
 import ElementUi from 'element-ui'
 import {Form,FormItem,Message,Button} from 'element-ui';
 import axios from 'axios'
+/*时间格式化组件*/
+import moment from 'moment'
+
 //自适应屏幕大小
 // import 'lib-flexible/flexible'
 /*
@@ -62,3 +65,14 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app');
+
+//全局过滤器
+Vue.filter('dateFmt', (input, formatString = "YYYY-MM-DD") => {
+    //es5函数参数设置默认值
+    //const lastFormatString = formatString ||
+
+
+
+    return moment(input).format(formatString)
+});
+
