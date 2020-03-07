@@ -69,7 +69,7 @@
                 // });
                 this.$refs.loginFormRef.validate((valid) => {
                     if (valid) {
-                        fetch('/api/user/dologin',
+                        fetch('/front/api/user/dologin',
                             {
                                 headers: {'Content-Type':'application/x-www-form-urlencoded'},
                                 method: 'post',
