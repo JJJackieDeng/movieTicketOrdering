@@ -27,7 +27,8 @@
                     <span
                             class="change"
                             onmouseover="this.className='changed'"
-                            onmouseout="this.className='change'">忘记密码？</span>
+                            onmouseout="this.className='change'">忘记密码？
+                    </span>
                 </el-form-item>
             </el-form>
         </div>
@@ -38,6 +39,8 @@
 
 <script>
     import * as Qs from "qs";
+    //导入MD5依赖
+    import md5 from 'js-md5'
 
     export default {
         data() {
@@ -75,7 +78,7 @@
                                 method: 'post',
                                 body: Qs.stringify({
                                     userName: this.loginForm.username,
-                                    password: this.loginForm.password
+                                    password: md5(this.loginForm.password)
                                 })
                             }
                         ).then(res => {
@@ -168,6 +171,6 @@
     .btns {
         display: flex;
         text-align: center;
-        justify-content: flex-end;
+        justify-content: center;
     }
 </style>
