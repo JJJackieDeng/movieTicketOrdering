@@ -1,6 +1,5 @@
 <template>
-    <body id="poster">
-    <div class="registerContainer">
+    <div  id="poster" class="registerContainer">
         <div class="registerBox">
             <el-container>
                 <el-main>
@@ -42,7 +41,6 @@
             </el-container>
         </div>
     </div>
-    </body>
 </template>
 
 <script>
@@ -127,7 +125,7 @@
                             return res.json();
                         }).then(data => {
                             if (data.code === 200) {
-                                this.$message.success("注册成功！请登录")
+                                this.$message.success("注册成功！请登录");
                                 this.$router.push({path: '/login'})
                             }
                         })
@@ -145,6 +143,9 @@
             tologin() {
                 this.$router.push("login")
             }
+        },
+        created() {
+            this.$emit('Header', false);
         }
     }
 
