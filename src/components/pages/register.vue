@@ -29,7 +29,11 @@
                         <el-form-item label="手机号码" prop="phoneNumber">
                             <el-input v-model.number="ruleForm.phoneNumber"></el-input>
                         </el-form-item>
-                        <el-form-item style="text-align: center">
+                        <el-form-item class="btns">
+                            <span class="change"
+                                  onmouseover="this.className='changed'"
+                                  onmouseout="this.className='change'"
+                                  @click="tologin()">返回登录</span>
                             <el-button type="primary" @click="register">提交</el-button>
                             <el-button @click="resetForm()">重置</el-button>
                         </el-form-item>
@@ -107,10 +111,10 @@
         methods: {
             register() {
                 this.$refs.ruleForm.validate((valid) => {
-                    if (valid){
+                    if (valid) {
                         fetch('/api/user/add',
                             {
-                                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                                 method: 'post',
                                 body: Qs.stringify({
                                     userName: this.ruleForm.userName,
@@ -119,14 +123,14 @@
                                     phoneNumber: this.ruleForm.phoneNumber
                                 })
                             }
-                        ).then(res=>{
+                        ).then(res => {
                             return res.json();
                         }).then(data => {
-                                if (data.code === 200) {
-                                    this.$message.success("注册成功！请登录")
-                                    this.$router.push({path: '/login'})
-                                }
-                            })
+                            if (data.code === 200) {
+                                this.$message.success("注册成功！请登录")
+                                this.$router.push({path: '/login'})
+                            }
+                        })
                             .catch(err => {
                                 console.log(err);
                                 this.$message("注册失败！请再试一下")
@@ -134,6 +138,12 @@
                     }
                 })
 
+            },
+            resetForm() {
+                this.$refs.ruleForm.resetFields();
+            },
+            tologin() {
+                this.$router.push("login")
             }
         }
     }
@@ -159,5 +169,13 @@
         top: 50%;
         transform: translate(-50%, -50%);
         box-shadow: #751489;
+    }
+    .change{
+        color: #cecece;
+    }
+    .btns {
+        display: flex;
+        text-align: center;
+        justify-content: center;
     }
 </style>
