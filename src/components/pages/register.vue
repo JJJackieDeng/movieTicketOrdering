@@ -110,13 +110,14 @@
             register() {
                 this.$refs.ruleForm.validate((valid) => {
                     if (valid) {
-                        fetch('/api/user/add',
+                        let password = this.$md5(this.ruleForm.password);
+                        fetch('front/api/user/add',
                             {
                                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                                 method: 'post',
-                                body: Qs.stringify({
+                                body: JSON.stringify({
                                     userName: this.ruleForm.userName,
-                                    password: this.ruleForm.password,
+                                    password: password, //使用无salt进行MD5一次加密后与后端交互
                                     sex: this.ruleForm.sex,
                                     phoneNumber: this.ruleForm.phoneNumber
                                 })
