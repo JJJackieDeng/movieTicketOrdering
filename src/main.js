@@ -6,6 +6,11 @@ import './assets/css/global.css'
 import ElementUi from 'element-ui'
 import {Form,FormItem,Message,Button} from 'element-ui';
 import axios from 'axios'
+import md5 from 'js-md5';
+// 引入echarts
+import echarts from 'echarts'
+
+
 /*时间格式化组件*/
 import moment from 'moment'
 
@@ -38,13 +43,15 @@ axios.interceptors.request.use(config =>{
 // Vue.prototype.$http=axios;
 
 Vue.config.productionTip = false;
-
+Vue.prototype.$echarts = echarts;
 Vue.use(ElementUi);
 Vue.use(Button);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.prototype.$message= Message;
-Vue.use(VueImageSwipe)
+Vue.use(VueImageSwipe);
+//md5
+Vue.prototype.$md5 = md5;
 
 Vue.use(Viewer, {
     defaultOptions: {
@@ -75,4 +82,17 @@ Vue.filter('dateFmt', (input, formatString = "YYYY-MM-DD") => {
 
     return moment(input).format(formatString)
 });
+
+
+// 挂载路由导航守卫
+// router.beforeEach(( to , from , next )=>{
+//     const name = localStorage.getItem('loginToken');
+//     if( name || to.path === '/login'){
+//         next()
+//     }else{
+//         next('/login')
+//     }
+// });
+
+
 

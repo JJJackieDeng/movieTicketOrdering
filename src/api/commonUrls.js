@@ -28,6 +28,16 @@ export function getALLOrders(body, methods) {
     return fetch('/front/api/order/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
 }
 
+/*获取所有订单信息*/
+
+// export const getALLOrders =params =>{return axios.get('${host}/api/order/selectAll',{params:params})};
+export function getAllScore(body, methods) {
+    return fetch('/front/api/score/selectAll?limit=' + body.limit + '&offset=' + body.offset, {
+        method: methods,
+        headers: header
+    })
+}
+
 export  function getAllMovie(body,methods) {
     return fetch('/front/api/movie/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
 }

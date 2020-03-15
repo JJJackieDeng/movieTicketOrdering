@@ -8,10 +8,11 @@ import purchaseDetail from "@/components/pages/purchaseDetail";
 import dashboard from '@/components/manage/dashboard'
 import manageHome from "@/components/manage/manageHome";
 import user from "@/components/manage/user";
-import movieInfo from "@/components/manage/movieInfo";
+import score from "../components/manage/score";
 import movie from "@/components/manage/movie";
 import orders from "@/components/manage/orders";
 import register from "../components/pages/register";
+import cinema from "../components/manage/cinema";
 
 
 Vue.use(VueRouter);
@@ -40,14 +41,21 @@ export default new VueRouter({
                         path: 'movie',
                         name:'movie',
                         component: movie
-                    },                    {
-                        path: 'movieInfo',
-                        name:'movieInfo',
-                        component: movieInfo
-                    },                    {
+                    },
+                    {
                         path: 'orders',
                         name:'orders',
                         component: orders
+                    },
+                    {
+                        path: 'cinema',
+                        name: 'cinema',
+                        component: cinema
+                    },
+                    {
+                        path: 'score',
+                        name: 'score',
+                        component: score
                     },
                 ]
             },
@@ -80,17 +88,8 @@ export default new VueRouter({
                 component: purchaseDetail
             },
 
-        ]
+        ],
 
 
-//挂载路由导航守卫
-// router.beforeEach((to,from,next)=>{
-//     //to代表即将访问的路径，from表示从哪个路径跳转而来，next表示放行
-//     if(to.path === '/login') return next();
-//     //获取token
-//     const tokenStr = window.sessionStorage.getItem('token');
-//     if(!tokenStr) return next('/login'); //用户没有登录,强制跳转到登录页面
-//     next()
-// });
 })
 
