@@ -8,17 +8,12 @@
                             <el-row :gutter="10">
                                 <el-col span="8">
                                     <!--todo 路径问题,是该存在服务器中的图片还是存在本地-->
-                                    <el-image
-                                            style="width: 320px;height: 440px;margin-left: 200px"
-                                            class="box-shadow"
-                                            src="../../assets/img/Luffy.jpg"
-                                            :preview-src-list="srcList">
-                                    </el-image>
+                                    <img class="box-shadow" src="url" :preview-src-list="srcList">
                                 </el-col>
                                 <span style="margin-left: 80px;font-size: 30px;color: white;font-weight: bold">{{movieInfo.movieName}}</span><br>
-                                <span style="margin-left: 80px;font-size: 30px;color: #000000;font-weight: bold">英文名</span><br>
+                                <!--                                <span style="margin-left: 80px;font-size: 30px;color: #000000;font-weight: bold">英文名</span><br>-->
                                 <span style="margin-left: 80px;font-size: 20px;color: white;">{{movieInfo.release}}</span><br>
-                                <span style="margin-left: 80px;font-size: 20px;color: white;">地区</span><br>
+                                <span style="margin-left: 80px;font-size: 20px;color: white;">地区：{{movieInfo.release}}</span><br>
                                 <span style="margin-left: 80px;">
                                     <el-button type="primary" @click="toPurchase">购票</el-button>
                                 </span>
@@ -58,6 +53,9 @@
         name: "showDetail",
         data() {
             return {
+
+                // url: require('@/assets/img/Luffy.jpg'),
+                url: require('../../assets/img/Luffy2.jpg'),
                 activeName: 'first',
                 srcList: [
                     'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658'
@@ -93,9 +91,9 @@
                 // }).catch(err=>{
                 //     console.log(err)
                 // })
-                fetch('/api/movieInfo/selectOne?id='+1,
+                fetch('front/api/movieInfo/selectOne?id=' + 2,
                     {
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        headers: {'Content-Type': 'application/json'},
                         //get方式不能请求body，参数要直接写在地址上面
                         method: 'get',
                         // body: Qs.stringify({
@@ -137,5 +135,11 @@
         background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#cecece), to(#eff6fd)); /*谷歌*/
         /*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#AC07BD), to(#f140f8));      !* Safari 4-5, Chrome 1-9*!*/
         /*background: -webkit-linear-gradient(top, #AC07BD, #f140f8);   !*Safari5.1 Chrome 10+*!*/
+    }
+
+    .box-shadow {
+        width: 320px;
+        height: 440px;
+        margin-left: 200px;
     }
 </style>
