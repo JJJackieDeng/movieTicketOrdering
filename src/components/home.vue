@@ -20,7 +20,15 @@
                         <el-input v-model="popularCinema.address" prefix-icon="el-icon-search"></el-input>
                     </el-form-item>
                 </el-form>
-                <el-footer>叶问4：完结篇</el-footer>
+                <span>高分电影推荐</span>
+                <div>
+                    <div v-for="(item, index) in scoreArr" :key="index" class="al-box-container">
+                        <div class="al-box-pretty al-box-shadow-radius">
+                            <span>{{item.movie.movieName}}</span>
+                            <span class="font-class">{{item.score}}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="rightSide">
                 <el-row>
@@ -53,6 +61,8 @@
 </template>
 
 <script>
+    import {request} from "../utils/request";
+
     export default {
         data() {
             return {
@@ -98,7 +108,10 @@
                         id: 4,
                         url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=084a50bfe5e99b2316621a8d96db5f21&imgtype=0&src=http%3A%2F%2Fc2.haibao.cn%2Fimg%2F1080_1541_100_0%2F1446022321.381%2F106d7d059fe5b8610e034b5adc6c3318.jpg'
                     },
-                ]
+                ],
+
+
+                scoreArr: []
             }
 
 
@@ -122,11 +135,28 @@
                     images: this.imageHotsList,
                     index: index,
                 })
+            },
+
+
+            getScore() {
+                request({
+                    url: 'api/score/selectAll?limit=100&offset=0',
+                }).then(res => {
+                    console.log(res);
+                    this.scoreArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         },
-        created: {
-            /*false为不显示头部*/
 
+        created() {
+            this.getScore();
+        },
+
+
+        mounted() {
+            this.getScore();
         }
 
     }
@@ -201,7 +231,12 @@
         width: 30% !important;
     }
 
+    .font-class {
+        color: #FFC600;
+        font-style: oblique;
+        float: right;
 
+    }
 </style>
 <style lang="scss">
     .homeIndex {
