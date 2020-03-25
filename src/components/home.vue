@@ -21,6 +21,7 @@
                     </el-form-item>
                 </el-form>
                 <span>高分电影推荐</span>
+                <!--                电影推荐显示-->
                 <div>
                     <div v-for="(item, index) in scoreArr" :key="index" class="al-box-container">
                         <div class="al-box-pretty al-box-shadow-radius">
@@ -31,16 +32,16 @@
                 </div>
             </div>
             <div class="rightSide">
+                <!--所有电影展示-->
                 <el-row>
                     <el-col v-for="(item, index) in imgList" :key="index" style="width: 300px">
+                        <!--                        {{item}}-->
                         <el-card :body-style="{ padding: '0px' }"
-                                 class="box-shadow box-radius m-10px"
-                        >
-                            <el-image @click="toShowDetail()"
-                                      style="width: 300px; height: 400px;"
-                                      :src="item.url">
-
-                            </el-image>
+                                 class="box-shadow box-radius m-10px">
+                            {{item.poster}}
+                            <img @click="toShowDetail(item)"
+                                 style="width: 300px; height: 400px;"
+                                 :src="item.movieInfo.poster" alt="">
                             <div style="width: 300px">
                                 <el-button
                                         onmouseover="this.style.backgroundColor='red';"
@@ -62,6 +63,7 @@
 
 <script>
     import {request} from "../utils/request";
+    import eventBus from "../utils/eventBus";
 
     export default {
         data() {
@@ -87,46 +89,22 @@
                 ],
 
 
-                imgList: [
-                    {
-                        id: 0,
-                        url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=a6ad031533c9a783a0338ce82429a489&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F1becd994d67ed1879045abe6e3be8998d7f51a25205cb-z3w1tf_fw658'
-                    },
-                    {
-                        id: 1,
-                        url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403249&di=533177229bb5f35189299cecfe4c9f2f&imgtype=0&src=http%3A%2F%2Fnews.xinhuanet.com%2Ffashion%2F2017-01%2F01%2F1120226527_14831691672231n.jpg'
-                    },
-                    {
-                        id: 2,
-                        url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403400&di=bcb436642a4727b2067ad31367efa4d2&imgtype=0&src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F2dbff1a7715cd7c69dc8fdcc42a785564388413c.jpg'
-                    },
-                    {
-                        id: 3,
-                        url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467436243&di=48678577a560d33190b1d0db20bdf2c0&imgtype=jpg&src=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D1693275011%2C3329562039%26fm%3D214%26gp%3D0.jpg'
-                    },
-                    {
-                        id: 4,
-                        url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1580467403399&di=084a50bfe5e99b2316621a8d96db5f21&imgtype=0&src=http%3A%2F%2Fc2.haibao.cn%2Fimg%2F1080_1541_100_0%2F1446022321.381%2F106d7d059fe5b8610e034b5adc6c3318.jpg'
-                    },
-                ],
-
-
+                imgList: [],
                 scoreArr: []
             }
 
 
         },
         methods: {
-            toShowDetail() {
-                // this.$router.push({name:"showDetail",query:{goodsId:this.goodsId}})
-                this.$router.push({path: "showDetail"})
+            toShowDetail(movieInfo) {
+                eventBus.$emit("sendData", movieInfo);
+                this.$router.push({path: "showDetail"});
+
             },
             toPurchaseDetail() {
-                // this.$router.push({name:"showDetail",query:{goodsId:this.goodsId}})
                 this.$router.push({path: "purchaseDetail"})
             },
             toHome() {
-                // this.$router.push({name:"showDetail",query:{goodsId:this.goodsId}})
                 this.$router.push({path: "home"})
             },
 
@@ -140,10 +118,20 @@
 
             getScore() {
                 request({
-                    url: 'api/score/selectAll?limit=100&offset=0',
+                    url: 'api/movieInfo/queryOrderByScore',
                 }).then(res => {
                     console.log(res);
                     this.scoreArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            getAllMovie() {
+                request({
+                    url: 'api/movie/selectAll?limit=100&offset=0',
+                }).then(res => {
+                    console.log(res);
+                    this.imgList = res.data;
                 }).catch(err => {
                     console.log(err);
                 });
@@ -152,11 +140,13 @@
 
         created() {
             this.getScore();
+            this.getAllMovie();
         },
 
 
         mounted() {
             this.getScore();
+            this.getAllMovie();
         }
 
     }
@@ -197,20 +187,6 @@
             }
         }
     }
-
-
-    /*.showItem {*/
-    /*    display: inline-block;*/
-    /*    width: 180px;*/
-    /*    height: 250px;*/
-    /*    margin: 10px 0px 10px 60px;*/
-    /*    background-color: #fffdf5;*/
-    /*    border-radius: 5px;*/
-    /*    !*text-align: center;*!*/
-    /*    padding-top: 5px;*/
-
-    /*}*/
-
     .el-carousel__item h3 {
         color: #475669;
         font-size: 14px;
