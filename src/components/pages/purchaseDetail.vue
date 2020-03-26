@@ -1,5 +1,12 @@
 <template>
+    <!--    <div>-->
+    <!--        <div>-->
+    <!--            -->
+    <!--        </div>-->
+    <!--    </div>-->
+
     <div class="purchase">
+        <!--选择场次-->
         <div class="steps">
             <el-steps :space="400" :active="1" finish-status="success">
                 <el-step title="选择影片场次"></el-step>
@@ -8,6 +15,20 @@
                 <el-step title="影院取票观影"></el-step>
             </el-steps>
         </div>
+        <span>选择场次-></span>
+        <el-date-picker
+                v-model="date"
+                type="date"
+                :editable="false"
+                placeholder="场次日期选择"
+                value-format="yyyy-MM-dd"
+                @change="handleDateChange"
+                :picker-options="pickerOptions0">
+        </el-date-picker>
+        <div class="al-bg-color-light-blue" v-if="schedule != null">{{schedule.id}}</div>
+        <!--        <span>{{schedule.room}}</span>-->
+
+
         <el-row :gutter="10">
             <el-col :span="16">
                 <div class="seat-wrapper">
@@ -72,10 +93,15 @@
             </el-col>
         </el-row>
     </div>
+
 </template>
 
 <script>
     import {getMoiveSeats, confirmSeats} from '../../api/commonUrls'
+    import {AllScheduleByDate} from '../../api/schedule'
+    import {querySeatById} from '../../api/seat'
+    import Qs from 'qs';
+    import {request} from "../../utils/request";
 
     export default {
         data() {
@@ -83,29 +109,44 @@
                 chooseSeats: [], //已选座位
                 isClick: [], //座位是否选中
                 isSell: [], //已售不可选
+                //场次日期选择器
+                id: this.$route.params.mid,
+                // seatId: this.schedule.id,
+                date: '', //用户选择的日期
+                schedule: null, //初始化schedule并存储后端传来的schedule信息
+                pickerOptions0: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now() - 8.64e7;
+                    }
+                }
             }
 
         },
+
+        mounted() {
+            // this.getSeats();
+        },
+
         methods: {
             //判断是否选中座位
-            choseSeats(idnex) {
+            choseSeats(index) {
                 if (this.chooseSeats.length !== 0) {
-                    var index2 = this.chooseSeats.indexOf(idnex);
+                    let index2 = this.chooseSeats.indexOf(index);
                     if (index2 === -1) {
-                        this.chooseSeats.push(idnex);
-                        this.$set(this.isClick, idnex, true);
+                        this.chooseSeats.push(index);
+                        this.$set(this.isClick, index, true);
                     } else {
-                        this.$set(this.isClick, idnex, false);
+                        this.$set(this.isClick, index, false);
                         this.chooseSeats.splice(index2, 1)
                     }
                 } else {
-                    this.chooseSeats.push(idnex);
-                    this.$set(this.isClick, idnex, true);
+                    this.chooseSeats.push(index);
+                    this.$set(this.isClick, index, true);
                 }
             },
             //选座
-            clickSeats(idnex) {
-                this.choseSeats(idnex)
+            clickSeats(index) {
+                this.choseSeats(index);
                 console.log(this.chooseSeats)
             },
             cantSelect() {
@@ -114,28 +155,69 @@
             },
             //确定选座
             confirmSeats() {
-                confirmSeats({
-                    seats: this.chooseSeats, //数组
-                    scheduleId: this.$route.query.scheduleId
-                }, 'post').then(res => {
-                    return res.json()
+                console.log(this.chooseSeats.toString());
+                console.log(this.schedule.id);
+
+
+                let params = {
+                    rows: this.chooseSeats.toString(), //数组
+                    scheduleId: this.schedule.id
+                };
+
+                request({
+                    url: 'api/seat/add',
+                    method: 'post',
+                    data: this.qsParam(params),
+                    header: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(res => {
-                    if (+res.code === 200) {
-                        this.$message.success("选座成功！");
-                    } else {
-                        this.$message.error("选座失败！");
-                    }
+                    console.log(res);
                 }).catch(err => {
                     console.log(err);
-                    this.$message.error("选座接口出现错误！");
+                });
+
+
+                // confirmSeats({
+                //     rows: this.chooseSeats, //数组
+                //     scheduleId: this.$route.query.scheduleId
+                // }, 'post').then(res => {
+                //     return res.json()
+                // }).then(res => {
+                //     if (+res.code === 200) {
+                //         this.$message.success("选座成功！");
+                //     } else {
+                //         this.$message.error("选座失败！");
+                //     }
+                // }).catch(err => {
+                //     console.log(err);
+                //     this.$message.error("选座接口出现错误！");
+                // })
+            },
+            //获取场次信息
+            getSchedule(date) {
+                /*                console.log(date);
+                                this.$message.success("id: " + this.id);
+                                this.$message.info("date: " + date);*/
+                AllScheduleByDate({
+                    dateStr: date,
+                    movie_id: this.id,
+                }, 'get').then(res => {
+                    return res.json()
+                }).then(res => {
+                    this.schedule = res.data[0];
+                    console.log(typeof (this.schedule));
+                    console.log(this.schedule);
+
+                    this.getSeats();
                 })
             },
             //获取座位状态
             getSeats() {
-                getMoiveSeats({scheduleId: this.$route.query.scheduleId}, 'get').then(res => {
+                // this.$message.success(this.seatId);
+                querySeatById({scheduleId: this.schedule.id}, 'get').then(res => {
                     return res.json()
                 }).then(res => {
-                    for (let i of res) {
+                    console.log(res.data);
+                    for (let i of res.data) {
                         this.$set(this.isSell, i.row, true);
                     }
 
@@ -143,8 +225,34 @@
                     console.log(err);
                     this.$message.error('获取座位状态出错！');
                 })
+
+                // console.log("==================================");
+                // console.log(this.schedule);
+                //
+                // request({
+                //     url: 'api/seat/selectByScheduleId?scheduleId='+ this.schedule.id,
+                // }).then(res => {
+                //     console.log(res);
+                //     for (let item of res.data.data) {
+                //         this.$set(this.isSell, item.row, true);
+                //     }
+                // }).catch(err => {
+                //     console.log(err);
+                //     this.$message.error('获取座位状态出错！');
+                // });
             },
+
+            handleDateChange(date) {
+                // this.date = date;
+                // console.log(date);
+                // this.$message.success(date);
+
+
+                this.getSchedule(date);
+
+            }
         },
+        watch: {},
 
 
         // 过滤器
@@ -167,9 +275,7 @@
                 return price.toFixed(2);
             }
         },
-        mounted() {
-            this.getSeats();
-        }
+
     }
 
 </script>
@@ -396,7 +502,7 @@
 
     .btn-wrapper {
         margin: 20px auto;
-        width: 1000px;
+        width: 100px;
         height: 30px;
     }
 
