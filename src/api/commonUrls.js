@@ -19,16 +19,14 @@ export function getInfo(data, methods) {
 //     return fetch('/api/user/dologin', {method: methods,data:JSON.stringify(data),headers:header,})
 // }
 
-export function getAllUsers(body, methods) {
-    return fetch('/front/api/user/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
-}
+
 /*获取所有订单信息*/
 // export const getALLOrders =params =>{return axios.get('${host}/api/order/selectAll',{params:params})};
 export function getALLOrders(body, methods) {
     return fetch('/front/api/order/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
 }
 
-/*获取所有订单信息*/
+/*获取所有评分信息*/
 
 // export const getALLOrders =params =>{return axios.get('${host}/api/order/selectAll',{params:params})};
 export function getAllScore(body, methods) {
@@ -38,6 +36,27 @@ export function getAllScore(body, methods) {
     })
 }
 
+/*获取所有用户*/
+export function getAllUsers(body, methods) {
+    return fetch('/front/api/user/selectAll?limit=' + body.limit + '&offset=' + body.offset, {
+        method: methods,
+        headers: header2
+    })
+}
 export  function getAllMovie(body,methods) {
     return fetch('/front/api/movie/selectAll?limit='+body.limit+'&offset='+body.offset, {method: methods,headers:header2})
+}
+
+//获取座位信息
+export function getMoiveSeats(body, methods) {
+    return fetch('/front/api/seat/selectByScheduleId?scheduleId=' + body.scheduleId, {
+        method: methods,
+        headers: header2
+    })
+}
+
+
+//确认选座
+export function confirmSeats(body, methods) {
+    return fetch('/front/api/seat/add', {method: methods, headers: header2})
 }
