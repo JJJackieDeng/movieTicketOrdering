@@ -56,7 +56,7 @@
                     <el-table-column
                             prop="createTime"
                             label="创建时间"
-                            >
+                    >
                     </el-table-column>
                     <el-table-column
                             prop="modifiedTime"
@@ -64,40 +64,13 @@
                     </el-table-column>
 
                     <el-table-column label="操作" width="200px">
-                        <el-dialog
-                                title="用户修改"
-                                :visible.sync="dialogVisible"
-                                width="30%"
-                                :before-close="handleClose">
-                            <el-form ref="form" :model="tableData" label-width="80px">
-                                <el-form-item label="用户名" prop="userName">
-                                    <el-input type="text" v-model="userForm.userName"></el-input>
-                                </el-form-item>
-                                <el-form-item label="密码" prop="password">
-                                    <el-input v-model="userForm.password"></el-input>
-                                </el-form-item>
-                                <el-form-item label="确认密码" prop="password">
-                                    <el-input v-model="userForm.password"></el-input>
-                                </el-form-item>
-                                <el-form-item label="性别" prop="sex">
-                                    <el-radio v-model="userForm.sex" label="1">男</el-radio>
-                                    <el-radio v-model="userForm.sex" label="2">女</el-radio>
-                                </el-form-item>
-                                <el-form-item label="电话号码" prop="phoneNumber">
-                                    <el-input v-model="userForm.phoneNumber"></el-input>
-                                </el-form-item>
-                            </el-form>
-                            <span slot="footer" class="dialog-footer">
-                                <el-button @click="dialogVisible = false">取 消</el-button>
-                                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-                            </span>
-                        </el-dialog>
-                        <el-button type="success" @click="openGet">修改</el-button>
-                        <el-button type="danger" @click="toDelete">删除</el-button>
+                        <template slot-scope="scope">
+                            <el-button type="success" @click="openGet(scope.row.id)">修改</el-button>
+                            <el-button type="danger" @click="toDelete(scope.row.id)">删除</el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
-
-                <!--分页值的输入-->
+                <!--todo 分页值的输入-->
                 <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
@@ -108,32 +81,34 @@
                         :total="total"
                 ></el-pagination>
                 <!--修改用户信息-->
-                <div v-if="flag" class="getInfo1">
-                    <h2>用户信息修改</h2>
-                    <div class="update">
-                        <el-form ref="form" :model="updateUser" label-width="80px">
-                            <el-form-item label="用户名">
-                                <el-input v-model="updateUser.userName"></el-input>
-                            </el-form-item>
-                            <el-form-item label="密码">
-                                <el-input v-model="updateUser.password"></el-input>
-                            </el-form-item>
-                            <el-form-item label="性别">
-                                <el-input v-model="updateUser.sex"></el-input>
-                            </el-form-item>
-                            <el-form-item label="手机号码">
-                                <el-input v-model="updateUser.phoneNumber"></el-input>
-                            </el-form-item>
-
-                            <div class="addButton">
-                                <el-form-item>
-                                    <el-button type="primary" @click="update()">提交</el-button>
-                                    <el-button @click="closeGet()">取消</el-button>
-                                </el-form-item>
-                            </div>
-                        </el-form>
-                    </div>
-                </div>
+                <el-dialog
+                        title="用户修改"
+                        :visible.sync="dialogVisible"
+                        width="30%"
+                        :before-close="handleClose">
+                    <el-form ref="form" :model="tableData" label-width="80px">
+                        <el-form-item label="用户名" prop="userName">
+                            <el-input type="text" v-model="userForm.userName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" prop="password">
+                            <el-input v-model="userForm.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="password">
+                            <el-input v-model="userForm.password"></el-input>
+                        </el-form-item>
+                        <el-form-item label="性别" prop="sex">
+                            <el-radio v-model="userForm.sex" label="1">男</el-radio>
+                            <el-radio v-model="userForm.sex" label="2">女</el-radio>
+                        </el-form-item>
+                        <el-form-item label="电话号码" prop="phoneNumber">
+                            <el-input v-model="userForm.phoneNumber"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                                <el-button @click="dialogVisible = false">取 消</el-button>
+                                <el-button type="primary" @click="update">确 定</el-button>
+                            </span>
+                </el-dialog>
 
             </el-main>
 
@@ -143,6 +118,8 @@
 
 <script>
     import * as CommonUrls from '../../api/commonUrls'
+    import * as userDQL from '../../api/user'
+    import {request} from "../../utils/request";
 
     export default {
         name: "user",
@@ -159,14 +136,14 @@
                 },
                 /*修改用户数据*/
                 updateUser: {
-                    id:'',
+                    id: '',
                     userName: '',
                     sex: '',
                     password: '',
                     phoneNumber: '',
                 },
                 /*是否修改用户信息，默认为否*/
-                flag: false,
+                dialogVisible: false,
 
                 tableData: [],
                 limit: 100, // todo ,每页查询多少个
@@ -184,10 +161,20 @@
                 this.offset = val;
             },
             /*修改用户信息窗口*/
-            openGet() {
-                /*todo 这里的id该如何获取*/
-                if (this.updateUser.id) {
-                    this.flag = !this.flag;
+            openGet(id) {
+                if (id) {
+                    this.dialogVisible = true;
+                    this.userForm.id = id;
+                    userDQL.selectUserByID({
+                        id: this.userForm.id
+                    }).then(res => {
+                        console.log(res);
+                        this.tableData = res;
+                    }).catch(function (err) {
+                        if (err.response) {
+                            console.log(err.response);
+                        }
+                    })
                 } else {
                     this.$message("请选择一条数据");
                 }
@@ -198,18 +185,23 @@
             },
             /*确认修改*/
             update() {
-                let _this = this;
-                    fetch("/user/update", {
-                        id: _this.updateUser.id,
-                        userName: _this.updateUser.userName,
-                        sex: _this.updateUser.sex,
-                        password: _this.updateUser.password,
-                        phoneNumber: _this.updateUser.phoneNumber
+                //修改密码之前进行第一次MD5加密
+                let password = this.$md5(this.userForm.password);
+                fetch("/front/api/user/update", {
+                    method: "post",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        id: this.userForm.id,
+                        userName: this.userForm.userName,
+                        sex: this.userForm.sex,
+                        password: password,
+                        phoneNumber: this.userForm.phoneNumber
                     })
+                })
                     .then(res => {
                         if (res.data.code === 200) {
                             this.$message("提交成功");
-                            this.flag = !this.flag;
+                            this.dialogVisible = true;
                             this.reload();
                         }
                     })
@@ -228,17 +220,29 @@
                     .catch(_ => {
                     });
             },
-            toDelete() {
+            toDelete(id) {
+                console.log(id);
                 this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message({
-                        /*todo 这里应该与后端进行一个验证然后返回是success才确定删除成功*/
-                        type: 'success',
-                        message: '删除成功!'
-                    });
+                    let params = {id: id};
+                    request({
+                        url: 'api/user/deleteById',
+                        method: 'post',
+                        data: this.qsParam(params),
+                        header: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }).then(res => {
+                            if (res.data.code === 200) {
+                                this.$message.success("删除成功");
+                                /*删除之后重新查询数据*/
+                                this.GetTableData();
+                            } else {
+                                this.$message.error("请求错误，删除失败！！");
+                            }
+                        }
+                    )
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -246,6 +250,7 @@
                     });
                 });
             },
+            /*获取所有数据*/
             GetTableData() {
                 CommonUrls.getAllUsers({
                     limit: this.limit,
