@@ -1,10 +1,4 @@
 <template>
-    <!--    <div>-->
-    <!--        <div>-->
-    <!--            -->
-    <!--        </div>-->
-    <!--    </div>-->
-
     <div class="purchase">
         <!--选择场次-->
         <div class="steps">
@@ -25,10 +19,15 @@
                 @change="handleDateChange"
                 :picker-options="pickerOptions0">
         </el-date-picker>
-        <div class="al-bg-color-light-blue" v-if="schedule != null">{{schedule.id}}</div>
+        <div class="al-text-color-light-red al-p-10px" v-if="schedule != null">
+            <span v-for="(item, index) in schedule">
+                <el-link :underline="false"
+                         class="al-p-10px al-m-left-20px"
+                         @click="getSeats(item.id)"
+                >{{item.schedule}} &nbsp;</el-link>
+            </span>
+        </div>
         <!--        <span>{{schedule.room}}</span>-->
-
-
         <el-row :gutter="10">
             <el-col :span="16">
                 <div class="seat-wrapper">
@@ -92,16 +91,29 @@
                 </div>
             </el-col>
         </el-row>
+
+        <el-dialog
+                title="订单"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+            <span>选择支付方式</span><br>
+            <span>选择支付方式</span><br>
+            <span>选择支付方式</span><br>
+            <span slot="footer" class="dialog-footer">
+                                <el-button @click="dialogVisible = false">取 消</el-button>
+                                <el-button type="primary" @click="toPay">确 定</el-button>
+                            </span>
+        </el-dialog>
     </div>
 
 </template>
 
 <script>
-    import {getMoiveSeats, confirmSeats} from '../../api/commonUrls'
     import {AllScheduleByDate} from '../../api/schedule'
     import {querySeatById} from '../../api/seat'
-    import Qs from 'qs';
     import {request} from "../../utils/request";
+    import {pay} from "../../api/commonUrls";
 
     export default {
         data() {
@@ -110,23 +122,37 @@
                 isClick: [], //座位是否选中
                 isSell: [], //已售不可选
                 //场次日期选择器
+                /*是否支付界面，默认为否*/
+                dialogVisible: false,
                 id: this.$route.params.mid,
+                radio: '',
                 // seatId: this.schedule.id,
                 date: '', //用户选择的日期
-                schedule: null, //初始化schedule并存储后端传来的schedule信息
+                tableData: [],
+                order: {
+                    /*订单号*/
+                    orderId: '',
+                    /*座位*/
+                    seats: '',
+                    /*根据这个查出cinema名称*/
+                    cinemaId: '',
+                    /*放映日期与时间*/
+                    /*todo 还差一个放映厅  */
+                    date: '',
+                    runTime: '',
+                    endTime: '',
+                },
+                schedule: {}, //初始化schedule并存储后端传来的schedule信息
                 pickerOptions0: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 8.64e7;
                     }
-                }
+                },
+
+                timetable: []
             }
 
         },
-
-        mounted() {
-            // this.getSeats();
-        },
-
         methods: {
             //判断是否选中座位
             choseSeats(index) {
@@ -153,67 +179,109 @@
                 this.$message.warning("该座位已售！");
                 return false;
             },
+            toPay() {
+                /*付款接口，其中orderID*/
+                pay({}, 'post').then(res => {
+                    return res.json();
+                }).then(res => {
+                    console.log(res);
+                    document.querySelector('body').innerHTML = res;
+                    // 创建div
+                    const div = document.createElement('div');
+                    // 将返回的form 放入div
+                    div.innerHTML = res;
+                    document.body.appendChild(div);
+                    document.forms[0].submit()
+                }).catch(err => {
+                    console.log(err);
+                })
+            },
             //确定选座
             confirmSeats() {
                 console.log(this.chooseSeats.toString());
                 console.log(this.schedule.id);
-
+                /*根据movieID查询当前电影的电影名称*/
 
                 let params = {
                     rows: this.chooseSeats.toString(), //数组
-                    scheduleId: this.schedule.id
+                    scheduleId: this.schedule.id,
+                    order: {
+                        /*场次接口，日期，开始时间与结束时间*/
+                        date: '',
+                        runTime: this.schedule.schedule,
+                        endTime: '',
+                        /*前台过滤器计算得来，必传*/
+                        total: '',
+                        /*必传*/
+                        /*movie接口*/
+                        movieName: '',
+                        /*cinema接口*/
+                        address: '',
+                    }
+                    // order: ''//订单信息address,status,runtime为schudule中的schedule,seats字段为rows
                 };
-
+                console.log(params);
                 request({
                     url: 'api/seat/add',
                     method: 'post',
+                    // data: this.qsParam(params),
                     data: this.qsParam(params),
                     header: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(res => {
                     console.log(res);
+                    if (res.data.code === 200) {
+                        this.$message.success("选座成功！");
+                        /*弹出支付页面*/
+                        this.dialogVisible = true;
+                    } else if (res.data.code === 404) {
+                        this.$message.error("座位已被选，请选择其他座位！");
+                    } else {
+                        console.log(res.data.code);
+                        this.$message.error("选座失败！");
+                    }
                 }).catch(err => {
                     console.log(err);
                 });
-
-
-                // confirmSeats({
-                //     rows: this.chooseSeats, //数组
-                //     scheduleId: this.$route.query.scheduleId
-                // }, 'post').then(res => {
-                //     return res.json()
-                // }).then(res => {
-                //     if (+res.code === 200) {
-                //         this.$message.success("选座成功！");
-                //     } else {
-                //         this.$message.error("选座失败！");
-                //     }
-                // }).catch(err => {
-                //     console.log(err);
-                //     this.$message.error("选座接口出现错误！");
-                // })
             },
             //获取场次信息
+            //这里获取场次的时候应该点击日期之后会有很多个时间段可以选择，然后再点击时间才能加载某个场次
             getSchedule(date) {
-                /*                console.log(date);
-                                this.$message.success("id: " + this.id);
-                                this.$message.info("date: " + date);*/
                 AllScheduleByDate({
                     dateStr: date,
                     movie_id: this.id,
                 }, 'get').then(res => {
                     return res.json()
                 }).then(res => {
-                    this.schedule = res.data[0];
-                    console.log(typeof (this.schedule));
-                    console.log(this.schedule);
+                    this.schedule = res.data;
+                    for (let item of res.data) {
+                        // console.log(item.date);
+                        this.getTimetable(item.schedule);
+                        this.timetable.push(item.schedule);
 
-                    this.getSeats();
+                        //this.getSeats(item.id);
+                    }
+                    //this.getSeats();
                 })
             },
+
+            //选择场次时间
+            getTimetable(schedule) {
+                console.log(schedule);
+                // request({
+                //     url: 'api/schedule/queryByDate',
+                // }).then(res => {
+                //     console.log(res);
+                // }).catch(err => {
+                //     console.log(err);
+                // });
+            },
+
+
             //获取座位状态
-            getSeats() {
+            getSeats(scheduleId) {
                 // this.$message.success(this.seatId);
-                querySeatById({scheduleId: this.schedule.id}, 'get').then(res => {
+                console.log(scheduleId);
+                querySeatById({scheduleId: scheduleId}, 'get').then(res => {
                     return res.json()
                 }).then(res => {
                     console.log(res.data);
@@ -225,36 +293,25 @@
                     console.log(err);
                     this.$message.error('获取座位状态出错！');
                 })
-
-                // console.log("==================================");
-                // console.log(this.schedule);
-                //
-                // request({
-                //     url: 'api/seat/selectByScheduleId?scheduleId='+ this.schedule.id,
-                // }).then(res => {
-                //     console.log(res);
-                //     for (let item of res.data.data) {
-                //         this.$set(this.isSell, item.row, true);
-                //     }
-                // }).catch(err => {
-                //     console.log(err);
-                //     this.$message.error('获取座位状态出错！');
-                // });
             },
 
             handleDateChange(date) {
                 // this.date = date;
                 // console.log(date);
                 // this.$message.success(date);
-
-
                 this.getSchedule(date);
 
-            }
+            },
+            /*处理弹窗界面*/
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
         },
-        watch: {},
-
-
         // 过滤器
         filters: {
 
@@ -276,6 +333,10 @@
             }
         },
 
+        mounted() {
+            // this.getSeats();
+        }
+
     }
 
 </script>
@@ -286,6 +347,11 @@
         margin: 0;
         padding: 0;
         height: 100%;
+    }
+
+    .payChooseWrapper {
+        justify-content: center;
+        align-items: center;
     }
 
     .el-header {
