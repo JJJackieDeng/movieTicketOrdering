@@ -113,7 +113,7 @@
                         let password = this.$md5(this.ruleForm.password);
                         fetch('front/api/user/add',
                             {
-                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                headers: {'Content-Type': 'application/json'},
                                 method: 'post',
                                 body: JSON.stringify({
                                     userName: this.ruleForm.userName,
@@ -127,10 +127,13 @@
                         }).then(data => {
                             if (data.code === 200) {
                                 this.$message.success("注册成功！请登录");
+                                // 注册成功后自动跳转至登录页
                                 this.$router.push({path: '/login'})
                             }
-                        })
-                            .catch(err => {
+                            if (data.code === 10001) {
+                                this.$message.error("该用户已注册！请尝试其他用户名")
+                            }
+                        }).catch(err => {
                                 console.log(err);
                                 this.$message("注册失败！请再试一下")
                             })
