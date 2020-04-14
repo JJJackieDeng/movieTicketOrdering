@@ -1,23 +1,7 @@
 <template>
     <div class="score">
         <el-container>
-
             <el-main>
-                <div>
-                    <!--                    <el-button type="danger" plain>批量删除</el-button>-->
-                    <!--                    <el-form-->
-                    <!--                            ref="searchForm"-->
-                    <!--                            :inline="true"-->
-                    <!--                            :model="searchMap"-->
-                    <!--                            style="margin-top: 20px;margin-left: 0px">-->
-                    <!--                        <el-form-item prop="companyName">-->
-                    <!--                            <el-input>-->
-                    <!--                                <template slot="prepend">用户名</template>-->
-                    <!--                            </el-input>-->
-                    <!--                        </el-form-item>-->
-                    <!--                        <el-button icon="el-icon-search"></el-button>-->
-                    <!--                    </el-form>-->
-                </div>
                 <el-table
                         :data="tableData"
                         stripe
@@ -49,13 +33,12 @@
                     </el-table-column>
                     <el-table-column
                             prop="createTime"
-                            label="创建时间"
-                    >
+                            label="创建时间">
                     </el-table-column>
 
                     <el-table-column label="操作" width="200px">
-                        <template>
-                            <el-button type="danger" @click="toDelete">删除</el-button>
+                        <template slot-scope="scope">
+                            <el-button type="danger" @click="toDelete(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -69,7 +52,6 @@
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="total"
                 ></el-pagination>
-                <!--修改用户信息-->
             </el-main>
 
         </el-container>
@@ -78,6 +60,7 @@
 
 <script>
     import * as CommonUrls from '../../api/commonUrls'
+    import {request} from "../../utils/request";
 
     export default {
         name: "score",
@@ -90,8 +73,11 @@
                     score: '',
                     comments: '',
                 },
+                total: 1,
+                currentPage: 1,
+                pageSize: '',
                 tableData: [],
-                limit: 100, // todo ,每页查询多少个
+                limit: '', // todo ,每页查询多少个
                 offset: 0, //todo 从第一个开始查
             }
         },
@@ -111,7 +97,38 @@
                 }).catch(err => {
                     console.log(err)
                 })
-            }
+            },
+            toDelete(id) {
+                console.log("--------------------------------")
+                console.log(id);
+                this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let params = {id: id};
+                    request({
+                        url: 'api/score/deleteById',
+                        method: 'post',
+                        data: this.qsParam(params),
+                        header: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }).then(res => {
+                            if (res.data.code === 200) {
+                                this.$message.success("删除成功");
+                                /*删除之后重新查询数据*/
+                                this.GetTableData();
+                            } else {
+                                this.$message.error("请求错误，删除失败！！");
+                            }
+                        }
+                    )
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
         },
         mounted() {
             this.GetTableData();
