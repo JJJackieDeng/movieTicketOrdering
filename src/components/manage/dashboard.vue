@@ -19,7 +19,7 @@
                 </div>
             </el-header>
             <div style="height: 1000px">
-                <div class="leftSide  al-height-100">
+                <div class="leftSide  al-height-100" style="margin-top: 20px">
                     <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
                         <el-radio-button :label="false">展开</el-radio-button>
                         <el-radio-button :label="true">收起</el-radio-button>
@@ -151,7 +151,7 @@
     }
 
     .el-header {
-        background-color: #F5F6F6;
+        background-color: #0ea5ff;
         font-size: 22px;
         color: #000000;
         vertical-align: middle;

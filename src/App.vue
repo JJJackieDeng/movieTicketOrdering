@@ -27,6 +27,8 @@
 </script>
 
 <style>
+    @import "assets/css/al-css.css";
+
     html, body {
         background-color: red;
     }

@@ -1,4 +1,5 @@
 module.exports = {
+    outputDir: 'dist',
     devServer: {
         proxy: {
             '/front': {

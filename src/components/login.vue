@@ -20,10 +20,13 @@
                 <el-form-item class="btns">
                     <span
                             class="change"
-                    onmouseover="this.className='changed'"
-                    onmouseout="this.className='change'" @click="toRegister">注册新帐号</span>
+                            onmouseover="this.className='changed'"
+                            onmouseout="this.className='change'"
+                            @click="toRegister"
+                            style="justify-content: left">注册新帐号</span>
                     <el-button type="primary" @click="login">登录</el-button>
                     <el-button type="info" @click="resetLoginForm" plain>重置</el-button>
+                    <!--todo 忘记密码解决方案：用户提供用户名与用户电话号码进行验证，或者使用验证码验证-->
                     <span
                             class="change"
                             onmouseover="this.className='changed'"
@@ -39,8 +42,6 @@
 
 <script>
     import * as Qs from "qs";
-    //导入MD5依赖
-    import md5 from 'js-md5'
 
     export default {
         data() {
@@ -72,26 +73,33 @@
                 // });
                 this.$refs.loginFormRef.validate((valid) => {
                     if (valid) {
+                        let password = this.$md5(this.loginForm.password);
                         fetch('/front/api/user/dologin',
                             {
-                                headers: {'Content-Type':'application/x-www-form-urlencoded'},
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                                 method: 'post',
                                 body: Qs.stringify({
                                     userName: this.loginForm.username,
-                                    password: md5(this.loginForm.password)
+                                    password: password //md5一次加密传输
                                 })
                             }
                         ).then(res => {
+                            console.log(res);
                             return res.json();
                         }).then(res => {
-                           if (res!=null){
-                               this.$message.success("登录成功！");
-                               console.log(res);
-                               this.$router.replace({path: '/home'})
-                           }else{
-                               this.$message.error("登录失败！")
-                           }
-                        }).catch(err=>{
+
+                            if (res.code === 200) {
+                                this.$message.success("登录成功！");
+                                console.log(res);
+                                this.$router.push({path: '/home'})
+                            } else if (res.code === 10001) {
+                                this.$message.error("登录失败！请联系管理员")
+                            } else if (res.code === 10002) {
+                                this.$message.error("认证失败！")
+                            } else {
+                                this.$message.error("登录接口错误！")
+                            }
+                        }).catch(err => {
                             console.log(err);
                             this.$message.error("登录出现了一点问题~")
                         })
@@ -100,27 +108,33 @@
                     }
                 });
             },
-            toRegister(){
-                this.$router.push({path:"/register"})
+            toRegister() {
+                this.$router.push({path: "/register"})
             }
+        },
+        created() {
+            this.$emit('Header', false);
         }
     };
 </script>
 
 <style lang="scss" scoped>
-    #poster{
+    #poster {
         /*background: url("../assets/img/Luffy2.jpg") no-repeat center;*/
         background: url("../assets/img/Xujinjiang.jpg") no-repeat center;
         height: 100%;
         width: 100%;
 
     }
-    .change{
+
+    .change {
         color: #cecece;
     }
-    .changed{
+
+    .changed {
         color: #0ea5ff;
     }
+
     .login_container {
         background-color: #0052ff;
     }

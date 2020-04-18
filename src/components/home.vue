@@ -1,6 +1,6 @@
 <template>
     <div class="homeIndex">
-        <!--                    走马灯推荐电影-->
+        <!--走马灯推荐电影-->
         <div class="carousel">
             <el-carousel
                     :interval="3000"
@@ -12,7 +12,9 @@
                 </el-carousel-item>
             </el-carousel>
         </div>
+        <!--左侧边栏-->
         <div class="mainContent">
+            <!--根据影院或者影片查询-->
             <div class="leftSide">
                 <h1>热门影院</h1>
                 <el-form>
@@ -35,11 +37,11 @@
                 <!--所有电影展示-->
                 <el-row>
                     <el-col v-for="(item, index) in imgList" :key="index" style="width: 300px">
-                        <!--                        {{item}}-->
+                        <!--                                                {{item}}-->
                         <el-card :body-style="{ padding: '0px' }"
                                  class="box-shadow box-radius m-10px">
                             {{item.poster}}
-                            <img @click="toShowDetail(item)"
+                            <img @click="toShowDetail(item.id)"
                                  style="width: 300px; height: 400px;"
                                  :src="item.movieInfo.poster" alt="">
                             <div style="width: 300px">
@@ -49,7 +51,7 @@
                                         type="primary"
                                         style="width: 300px"
                                         class="button"
-                                        @click="toPurchaseDetail">选座订票
+                                        @click="toPurchaseDetail(item.id)">选座订票
                                 </el-button>
                             </div>
                         </el-card>
@@ -63,7 +65,6 @@
 
 <script>
     import {request} from "../utils/request";
-    import eventBus from "../utils/eventBus";
 
     export default {
         data() {
@@ -74,7 +75,6 @@
                     'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
                 ],
                 currentDate: new Date(),
-
                 popularCinema: {
                     address: '',
                 }
@@ -96,13 +96,11 @@
 
         },
         methods: {
-            toShowDetail(movieInfo) {
-                eventBus.$emit("sendData", movieInfo);
-                this.$router.push({path: "showDetail"});
-
+            toShowDetail(mid) {
+                this.$router.push({path: "showDetail/" + mid});
             },
-            toPurchaseDetail() {
-                this.$router.push({path: "purchaseDetail"})
+            toPurchaseDetail(mid) {
+                this.$router.push({path: "purchaseDetail/" + mid})
             },
             toHome() {
                 this.$router.push({path: "home"})
@@ -155,7 +153,6 @@
 <style lang="scss" scoped>
     .homeIndex {
         background-color: #ffffff;
-
         .carousel {
             width: 70%;
             margin: 0 auto;

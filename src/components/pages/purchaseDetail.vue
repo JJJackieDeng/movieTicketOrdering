@@ -9,6 +9,8 @@
                 <el-step title="影院取票观影"></el-step>
             </el-steps>
         </div>
+        <!--todo 选择影院-->
+        <div>选择影院</div>
         <span>选择场次-></span>
         <el-date-picker
                 v-model="date"
@@ -19,12 +21,19 @@
                 @change="handleDateChange"
                 :picker-options="pickerOptions0">
         </el-date-picker>
-        <div class="al-text-color-light-red al-p-10px" v-if="schedule != null">
-            <span v-for="(item, index) in schedule">
-                <el-link :underline="false"
-                         class="al-p-10px al-m-left-20px"
-                         @click="getSeats(item.id)"
-                >{{item.schedule}} &nbsp;</el-link>
+        <div class="al-p-10px" v-if="schedule != null">
+            <span v-for="(item, index) in schedule" :key="index">
+                <span
+                        class="al-p-10px al-m-left-20px"
+
+                        @click="getSeats(item.id)">
+                    <span v-if="activeTimetable" class="al-text-color-light-red">
+                        {{item.schedule}}
+                    </span>
+                    <span v-else>
+                        {{item.schedule}}
+                    </span>
+                </span>
             </span>
         </div>
         <!--        <span>{{schedule.room}}</span>-->
@@ -56,7 +65,7 @@
                         <span v-for="(li,index) in 200"
                               :class="[isSell[index]?'bg-sited':isClick[index]?'bg-beChosen':'bg-sit']" :key="index"
                               @click="isSell[index]?cantSelect():clickSeats(index)">
-                            </span>
+                        </span>
                     </div>
                 </div>
             </el-col>
@@ -65,13 +74,13 @@
                     <div class="movieInfoBox">
                         <el-row :gutter="10">
                             <el-col :span="12">
-                                <img src="../../assets/img/Luffy2.jpg" alt="加载失败" class="posters">
+                                <img :src="movieInfo.poster" alt="加载失败" class="posters">
                             </el-col>
                             <el-col :span="12">
                                 <span>
-                                    海贼王：狂热行动
+                                    {{movieInfo.movie.movieName}}
                                 </span><br>
-                                <span>时长：101分钟</span>
+                                <span>时长：{{movieInfo.movieLength}}分钟</span>
                             </el-col>
                         </el-row>
                         <span>影院：</span><br>
@@ -84,7 +93,8 @@
                         </span><br>
                         <span>总价：</span><br>
 
-                        <div class="btn-wrapper">
+                        <div>
+                            <el-button type="success" @click="confirmSeats">推荐选座</el-button>
                             <el-button type="danger" @click="confirmSeats">确认选座</el-button>
                         </div>
                     </div>
@@ -97,7 +107,7 @@
                 :visible.sync="dialogVisible"
                 width="30%"
                 :before-close="handleClose">
-            <span>选择支付方式</span><br>
+            <span>订单号：{{this.orderID}}</span><br>
             <span>选择支付方式</span><br>
             <span>选择支付方式</span><br>
             <span slot="footer" class="dialog-footer">
@@ -126,9 +136,10 @@
                 dialogVisible: false,
                 id: this.$route.params.mid,
                 radio: '',
-                // seatId: this.schedule.id,
                 date: '', //用户选择的日期
                 tableData: [],
+                /*选座成功，后端返回的订单号*/
+                orderID: null,
                 order: {
                     /*订单号*/
                     orderId: '',
@@ -149,7 +160,13 @@
                     }
                 },
 
-                timetable: []
+                timetable: [],
+                chooseDate: null,
+                activeTimetable: false,
+                /*进入页面时获取电影数据*/
+                movieInfo: {},
+                cinemaInfo: {}
+
             }
 
         },
@@ -172,8 +189,13 @@
             },
             //选座
             clickSeats(index) {
-                this.choseSeats(index);
-                console.log(this.chooseSeats)
+                if (this.scheduleId != null && this.chooseDate != null) {
+                    this.choseSeats(index);
+                    console.log(this.chooseSeats)
+                } else {
+                    this.$message.warning("请先选择场次");
+                }
+
             },
             cantSelect() {
                 this.$message.warning("该座位已售！");
@@ -181,7 +203,13 @@
             },
             toPay() {
                 /*付款接口，其中orderID*/
-                pay({}, 'post').then(res => {
+                let params = {};
+                pay({
+                    orderID: '12312312312312',
+                    total: '111',
+                    movieName: '王炸',
+                    discription: '测试'
+                }, 'post').then(res => {
                     return res.json();
                 }).then(res => {
                     console.log(res);
@@ -199,26 +227,28 @@
             //确定选座
             confirmSeats() {
                 console.log(this.chooseSeats.toString());
-                console.log(this.schedule.id);
                 /*根据movieID查询当前电影的电影名称*/
 
                 let params = {
                     rows: this.chooseSeats.toString(), //数组
-                    scheduleId: this.schedule.id,
+                    /*todo scheduleID获取失败*/
+                    scheduleId: this.scheduleId,
+                    /*场次接口，日期，开始时间与结束时间*/
                     order: {
-                        /*场次接口，日期，开始时间与结束时间*/
-                        date: '',
+                        date: this.chooseDate,
                         runTime: this.schedule.schedule,
+                        /*todo 未找到解决方案*/
                         endTime: '',
                         /*前台过滤器计算得来，必传*/
                         total: '',
                         /*必传*/
                         /*movie接口*/
-                        movieName: '',
+                        movieName: this.movieInfo.movie.movieName,
                         /*cinema接口*/
                         address: '',
-                    }
-                    // order: ''//订单信息address,status,runtime为schudule中的schedule,seats字段为rows
+                        // order: ''//订单信息address,status,runtime为schudule中的schedule,seats字段为rows
+                    },
+
                 };
                 console.log(params);
                 request({
@@ -228,10 +258,12 @@
                     data: this.qsParam(params),
                     header: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res)
                     if (res.data.code === 200) {
                         this.$message.success("选座成功！");
                         /*弹出支付页面*/
+                        this.orderID = res.data.msg.orderId;
+                        console.log(this.orderID);
                         this.dialogVisible = true;
                     } else if (res.data.code === 404) {
                         this.$message.error("座位已被选，请选择其他座位！");
@@ -253,14 +285,21 @@
                     return res.json()
                 }).then(res => {
                     this.schedule = res.data;
+                    console.log("scheduleInfo: ");
+                    console.log(this.schedule);
+
+                    //获取影院信息
+                    this.getCinemaInfo(this.schedule[0].cinema_id);
+
                     for (let item of res.data) {
                         // console.log(item.date);
                         this.getTimetable(item.schedule);
                         this.timetable.push(item.schedule);
-
                         //this.getSeats(item.id);
                     }
                     //this.getSeats();
+                }).catch(err => {
+                    console.log(err);
                 })
             },
 
@@ -279,8 +318,10 @@
 
             //获取座位状态
             getSeats(scheduleId) {
-                // this.$message.success(this.seatId);
+                this.activeTimetable = true;
+                console.log("activeTimetable: " + this.activeTimetable);
                 console.log(scheduleId);
+                this.scheduleId = scheduleId;
                 querySeatById({scheduleId: scheduleId}, 'get').then(res => {
                     return res.json()
                 }).then(res => {
@@ -297,7 +338,8 @@
 
             handleDateChange(date) {
                 // this.date = date;
-                // console.log(date);
+                console.log(date);
+                this.chooseDate = date;
                 // this.$message.success(date);
                 this.getSchedule(date);
 
@@ -311,6 +353,38 @@
                     .catch(_ => {
                     });
             },
+
+
+            /**
+             * 获取电影信息
+             * @param id
+             */
+            getMovieInfoById(id) {
+                request({
+                    url: 'api/movieInfo/selectOne?id=' + id,
+                }).then(res => {
+                    console.log(res);
+                    this.movieInfo = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+
+            /**
+             * 获取影院信息
+             * @param cinemaId
+             */
+            getCinemaInfo(cinemaId) {
+                request({
+                    url: 'api/cinema/selectOne?id=' + cinemaId,
+                }).then(res => {
+                    console.log(res);
+                    this.cinemaInfo = res.data;
+                    console.log(this.cinema);
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
         },
         // 过滤器
         filters: {
@@ -335,6 +409,8 @@
 
         mounted() {
             // this.getSeats();
+            this.getMovieInfoById(this.$route.params.mid);
+
         }
 
     }
@@ -564,29 +640,6 @@
         width: 1px;
         height: 800px;
         border-left: 1px dashed #919191;
-    }
-
-    .btn-wrapper {
-        margin: 20px auto;
-        width: 100px;
-        height: 30px;
-    }
-
-    .btn-buy {
-        height: 100%;
-        line-height: 30px;
-        font-size: 14px;
-        border-radius: 5px;
-        padding: 0 5px;
-        background-color: #ffa349;
-        color: #ffffff;
-        display: inline-block;
-        cursor: pointer;
-        margin-right: 10px;
-    }
-
-    .smart {
-        background-color: #39ac6a;
     }
 
     .illustration {

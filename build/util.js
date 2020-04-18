@@ -5,7 +5,7 @@ const cssLoader = {
         sourceMap: options.sourceMap
     }
 }
-// 新增px2remLoader
+// 新增px2remLoade`r
 const px2remLoader = {
     loader: 'px2rem-loader',
     options: {

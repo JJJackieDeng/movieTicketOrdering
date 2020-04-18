@@ -18,7 +18,12 @@
                     </el-table-column>
                     <el-table-column
                             prop="orderId"
-                            label="下单人ID"
+                            label="订单号"
+                            width="200px">
+                    </el-table-column>
+                    <el-table-column
+                            prop="movieName"
+                            label="电影名称"
                             width="100px">
                     </el-table-column>
                     <el-table-column

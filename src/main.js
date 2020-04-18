@@ -6,6 +6,8 @@ import './assets/css/global.css'
 import ElementUi from 'element-ui'
 import {Form,FormItem,Message,Button} from 'element-ui';
 import axios from 'axios'
+import Qs from 'qs';
+
 import md5 from 'js-md5';
 // 引入echarts
 import echarts from 'echarts'
@@ -84,7 +86,7 @@ Vue.filter('dateFmt', (input, formatString = "YYYY-MM-DD") => {
 });
 
 
-// 挂载路由导航守卫
+// 挂载路由导航守卫,不需要进行登录便可以浏览一些界面
 // router.beforeEach(( to , from , next )=>{
 //     const name = localStorage.getItem('loginToken');
 //     if( name || to.path === '/login'){
@@ -93,6 +95,30 @@ Vue.filter('dateFmt', (input, formatString = "YYYY-MM-DD") => {
 //         next('/login')
 //     }
 // });
+
+
+Vue.prototype.qsParam = function (data) {
+    return Qs.stringify(data);
+};
+
+//axios通用请求
+Vue.prototype.request = function (method, url, data, headers) {
+    axios({
+        method: method,
+        url: url,
+        data: this.qsParam(data),
+        headers: headers
+    }).then(res => {
+        console.log(res);
+        this.res = res;
+    });
+
+    return this.res;
+};
+
+Vue.prototype.qsParam = function (data) {
+    return Qs.stringify(data);
+};
 
 
 

@@ -1,5 +1,5 @@
-import * as QS from "qs";
-import axios from 'axios'
+import qs from 'qs'
+
 /**get*/
 let header = {'Content-Type': 'application/json'};
 /*post*/
@@ -13,12 +13,6 @@ export function getMovieInfo(data, methods) {
 export function getInfo(data, methods) {
     return fetch('/front/api/user/selectOne/'+data, {method: methods,headers:header})
 }
-
-// //登录接口
-// export function dologin(data, methods) {
-//     return fetch('/api/user/dologin', {method: methods,data:JSON.stringify(data),headers:header,})
-// }
-
 
 /*获取所有订单信息*/
 // export const getALLOrders =params =>{return axios.get('${host}/api/order/selectAll',{params:params})};
@@ -59,4 +53,9 @@ export function getMoiveSeats(body, methods) {
 //确认选座
 export function confirmSeats(body, methods) {
     return fetch('/front/api/seat/add', {method: methods, headers: header2})
+}
+
+/*支付接口*/
+export function pay(body, methods) {
+    return fetch('/front/api/pay/doPay', {method: methods, headers: header2, body: qs.stringify(body)})
 }

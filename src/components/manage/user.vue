@@ -10,7 +10,6 @@
 
             <el-main>
                 <div>
-                    <!--                    <el-button type="danger" plain>批量删除</el-button>-->
                     <el-form
                             ref="searchForm"
                             :inline="true"
@@ -18,7 +17,7 @@
                             style="margin-top: 20px;margin-left: 0px">
                         <el-form-item prop="companyName">
                             <el-input>
-                                <template slot="prepend">用户名</template>
+                                <template slot="prepend" prop="userName">用户名</template>
                             </el-input>
                         </el-form-item>
                         <el-button icon="el-icon-search"></el-button>
@@ -109,7 +108,6 @@
                                 <el-button type="primary" @click="update">确 定</el-button>
                             </span>
                 </el-dialog>
-
             </el-main>
 
         </el-container>
@@ -126,6 +124,7 @@
         data() {
             return {
                 input: '',
+                userName: '',
                 /*用户数据获取*/
                 userForm: {
                     id: '',

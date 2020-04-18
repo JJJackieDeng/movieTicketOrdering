@@ -79,7 +79,9 @@
                 title="新增影院"
                 :visible.sync="dialogVisible"
                 width="35%"
-                :before-close="handleClose">
+                :before-close="handleClose"
+                center="true"
+                destroy-on-close="true">
             <el-form ref="form" :model="tableData" label-width="80px">
                 <el-form-item label="影院名称" prop="cinemaName">
                     <el-input type="text" v-model="cinemaForm.cinemaName"></el-input>
@@ -107,7 +109,9 @@
                 title="修改影院"
                 :visible.sync="dialogVisible2"
                 width="35%"
-                :before-close="handleClose">
+                :before-close="handleClose"
+                center="true"
+                lock-scroll="false">
             <el-form ref="form" :model="tableData" label-width="80px">
                 <el-form-item label="影院名称" prop="cinemaName">
                     <el-input type="text" v-model="cinemaForm.cinemaName"></el-input>

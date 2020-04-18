@@ -14,3 +14,11 @@ export function getAllCinema(body, methods) {
         headers: header
     })
 }
+
+/*删除影院*/
+export function deleteCinema(data, methods) {
+    return fetch('/front/api/cinema/delete/' + data, {
+        method: methods,
+        headers: header
+    })
+}

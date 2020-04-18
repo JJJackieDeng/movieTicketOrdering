@@ -348,6 +348,14 @@
     border: #0081FF 1px solid;
 }
 
+.al-show-border-gary {
+    border: #cecece 1px solid;
+}
+
+.al-show-border-light-gary {
+    border: #e5e5e5 1px solid;
+}
+
 /* 显示边框-蓝色：查看元素位置时使用 */
 .al-show-border-light-blue {
     border: #00b6ff 1px solid;

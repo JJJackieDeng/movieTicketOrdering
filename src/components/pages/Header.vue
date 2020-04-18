@@ -7,17 +7,17 @@
                                 <span>
                                     <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
                                     <!--todo 目前获取不 了,需要访问登录状态-->
-                                 {{this.userName}}
+                                    <!--                                 {{userName}}-->
                                 </span>
                         <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item icon="el-icon-user" split-button="true">
+                                <span @click="toHome">首页</span>
+                            </el-dropdown-item>
                             <el-dropdown-item icon="el-icon-user" split-button="true">
                                 <span @click="logout">注销</span>
                             </el-dropdown-item>
                             <el-dropdown-item icon=" " split-button="true">
-                                <span @click="toLogin">修改资料</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item icon=" " split-button="true">
-                                <span @click="toLogin">我的订单</span>
+                                <span @click="toPersonal"> 个人中心</span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -29,19 +29,36 @@
 <script>
     export default {
         name: "Header",
+        data() {
+            return {};
+        },
         methods:{
+            toHome() {
+                this.$router.push('/home')
+            },
             logout() {
                 /*清空缓存并重定向登录页面*/
                 sessionStorage.clear();
                 this.$router.push("/login")
             },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
+            toPersonal() {
+                this.$router.push('/personal');
+            }
         }
     }
 </script>
 
 <style scoped>
     .el-header {
-        background-color: #000000;
+        background-color: #262626;
         color: #ffffff;
         text-align: right;
         line-height: 60px;
