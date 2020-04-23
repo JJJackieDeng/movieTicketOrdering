@@ -84,7 +84,7 @@
                 title="电影上新"
                 :visible.sync="dialogVisible"
                 width="35%"
-                style="height: 10000px"
+                style="height: 800px"
                 :before-close="handleClose"
                 center="true"
                 lock-scroll="false">
@@ -98,7 +98,7 @@
                 <span>电影简介:
                     <el-input type="textarea" style="width: 350px"></el-input>
                 </span><br>
-                <span>导&nbsp; &nbsp;演:
+                <span>导&nbsp; &nbsp;&nbsp;&nbsp;演:
                     <el-input style="width: 350px"></el-input>
                 </span><br>
                 <span>演员:
@@ -111,20 +111,21 @@
                 <span>上映时间:
                     <el-input placeholder="何时何地在何处上映" style="width: 350px"></el-input>
                 </span><br>
-                <span>宣传海报:</span>
-                <el-upload
-                        class="upload-demo"
-                        action="https://jsonplaceholder.typicode.com/posts/"
-                        :on-preview="handlePreview"
-                        :on-remove="handleRemove"
-                        :before-remove="beforeRemove"
-                        list-type="picture"
-                        :limit="1"
-                        :on-exceed="handleExceed"
-                        :file-list="fileList">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+                <span>宣传海报:
+                    <el-upload
+                            class="upload"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :before-remove="beforeRemove"
+                            list-type="picture"
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                    </el-upload>
+                </span>
             </div>
             <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -146,7 +147,7 @@
                 //存储新增影片时上传的图片
                 fileList: [{
                     name: '',
-                    url: ''
+                    url: '',
                 }],
                 input: '',
                 movieForm: {
@@ -203,7 +204,7 @@
                 console.log(file);
             },
             handleExceed(files, fileList) {
-                this.$message.warning(`当前限制选择 1个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+                this.$message.warning(`当前限制选择1个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
             },
             beforeRemove(file, fileList) {
                 return this.$confirm(`确定移除 ${file.name}？`);
