@@ -10,7 +10,10 @@
             </el-steps>
         </div>
         <!--todo 选择影院-->
-        <div>选择影院</div>
+        <div>选择影院：
+            <area-select :level="2" type="text" v-model="selected" :data="pcaa"></area-select>
+            {{selected}}}
+        </div>
         <span>选择场次-></span>
         <el-date-picker
                 v-model="date"
@@ -25,7 +28,6 @@
             <span v-for="(item, index) in schedule" :key="index">
                 <span
                         class="al-p-10px al-m-left-20px"
-
                         @click="getSeats(item.id)">
                     <span v-if="activeTimetable" class="al-text-color-light-red">
                         {{item.schedule}}
@@ -124,10 +126,19 @@
     import {querySeatById} from '../../api/seat'
     import {request} from "../../utils/request";
     import {pay} from "../../api/commonUrls";
+    /*行政区域选择器支持*/
+    import {AreaCascader} from "vue-area-linkage"
+    import {pca, pcaa} from 'area-data';
 
     export default {
         data() {
             return {
+                /*行政区域支持*/
+                selected: [], //数组对应的就是选中的那个省市区。根据type来确定是省市区汉字的数组还是编码组成的数组。
+                //selected[0]省。selected[1]市。selected[2]区。
+                pca: pca,
+                pcaa: pcaa,
+
                 chooseSeats: [], //已选座位
                 isClick: [], //座位是否选中
                 isSell: [], //已售不可选
