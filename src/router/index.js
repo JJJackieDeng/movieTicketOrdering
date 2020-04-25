@@ -17,6 +17,7 @@ import schedule from "../components/manage/schedule";
 import personal from "../components/pages/personal";
 import myOrders from "../components/pages/myOrders";
 import myInfo from "../components/pages/myInfo";
+import forgotPass from "../components/ForgotPass";
 import Test1 from "../components/test/Test1";
 
 
@@ -98,6 +99,10 @@ export default new VueRouter({
         {
             path: '/home',
             component: home
+        },
+        {
+            path: '/forgotPass',
+            component: forgotPass
         },
         {
             path: '/test',
