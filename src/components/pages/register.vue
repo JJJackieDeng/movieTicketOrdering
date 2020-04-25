@@ -1,5 +1,5 @@
 <template>
-    <div  id="poster" class="registerContainer">
+    <div id="poster" class="registerContainer">
         <div class="registerBox">
             <el-container>
                 <el-main>
@@ -50,20 +50,12 @@
         name: "register",
         data() {
             let checkPhoneNumber = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('年龄不能为空'));
+                const regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+                if (regMobile.test(value)) {
+                    //合法的手机号码
+                    return callback()
                 }
-                setTimeout(() => {
-                    if (!Number.isInteger(value)) {
-                        callback(new Error('请输入数字值'));
-                    } else {
-                        if (value < 18) {
-                            callback(new Error('必须年满18岁'));
-                        } else {
-                            callback();
-                        }
-                    }
-                }, 1000);
+                callback(new Error('手机号码格式不正确'))
             };
             let validatePass = (rule, value, callback) => {
                 if (value === '') {
@@ -100,7 +92,7 @@
                     checkPass: [
                         {validator: validatePass2, trigger: 'blur'}
                     ],
-                    checkPhoneNumber: [
+                    phoneNumber: [
                         {validator: checkPhoneNumber, trigger: 'blur'}
                     ]
                 }
@@ -134,9 +126,9 @@
                                 this.$message.error("该用户已注册！请尝试其他用户名")
                             }
                         }).catch(err => {
-                                console.log(err);
-                                this.$message("注册失败！请再试一下")
-                            })
+                            console.log(err);
+                            this.$message("注册失败！请再试一下")
+                        })
                     }
                 })
 
@@ -175,9 +167,11 @@
         transform: translate(-50%, -50%);
         box-shadow: #751489;
     }
-    .change{
+
+    .change {
         color: #cecece;
     }
+
     .btns {
         display: flex;
         text-align: center;
