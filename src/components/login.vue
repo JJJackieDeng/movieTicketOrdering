@@ -26,11 +26,11 @@
                             style="justify-content: left">注册新帐号</span>
                     <el-button type="primary" @click="login">登录</el-button>
                     <el-button type="info" @click="resetLoginForm" plain>重置</el-button>
-                    <!--todo 忘记密码解决方案：用户提供用户名与用户电话号码进行验证，或者使用验证码验证-->
                     <span
                             class="change"
                             onmouseover="this.className='changed'"
-                            onmouseout="this.className='change'">忘记密码？
+                            onmouseout="this.className='change'"
+                            @click="toForgotPass">忘记密码？
                     </span>
                 </el-form-item>
             </el-form>
@@ -107,6 +107,9 @@
                         this.$message.error("请填写正确的账号或密码")
                     }
                 });
+            },
+            toForgotPass() {
+                this.$router.push({path: "/forgotPass"})
             },
             toRegister() {
                 this.$router.push({path: "/register"})
