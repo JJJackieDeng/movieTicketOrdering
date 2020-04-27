@@ -24,7 +24,7 @@
         </el-row>
         <el-row>
             <el-col :span="16" :offset="3">
-                <el-container style="height: 600px">
+                <el-container style="height:400px">
                     <el-tabs v-model="activeName" @tab-click="handleClick">
                         <el-tab-pane label="介绍" name="first">
                             <span style="text-indent: 2em">{{movieInfo.introduce}}</span>
@@ -35,11 +35,43 @@
                         </el-tab-pane>
                     </el-tabs>
                 </el-container>
+                <div>
+                    <div>最新短评</div>
+
+                    <!--                    <div>-->
+                    <!--                        <el-rate-->
+                    <!--                                v-model="7.0"-->
+                    <!--                                :max="10"-->
+                    <!--                                show-score-->
+                    <!--                                text-color="#ff9900">-->
+                    <!--                        </el-rate>-->
+                    <!--                    </div>-->
+
+                    <div v-for="(item,index) in comments" :key="index">
+                        <div>
+                            <span style="color: #333333">{{item.username}}</span>&nbsp;
+                            <span style="color: #999999">{{item.createTime}}</span>
+
+                            <div class="rate">
+                                <el-rate
+                                        :value="parseInt(item.score)"
+                                        :max="10"
+                                        :disabled="true"
+                                        :allow-half="true"
+                                        show-score
+                                        void-color="#ff9900"
+                                        text-color="#ff9900">
+                                </el-rate>
+                            </div>
+
+                            <span class="comments">{{item.comments}}</span>
+                        </div>
+                        <el-divider></el-divider>
+                    </div>
+                </div>
             </el-col>
+
         </el-row>
-        <div class="comments">
-            这是评论
-        </div>
     </div>
 </template>
 
@@ -52,9 +84,19 @@
             return {
                 activeName: 'first',
                 srcList: [],
+                value: 7,
                 id: this.$route.params.mid,
                 dataInfo: '',
-                movieInfo: null,
+                movieInfo: {
+                    poster: '',
+                    movie: {
+                        movieName: '',
+                        foreign: '',
+                        area: ''
+                    },
+
+
+                },
                 comments: {},
                 tempData: {}
             }
@@ -94,6 +136,11 @@
         mounted() {
             this.getMovie();
             this.getComments();
+        },
+        filters: {
+            parseScoreToInt: function (value) {
+                return parseInt(value, 10)
+            }
         }
     }
 </script>
@@ -114,6 +161,11 @@
     }
 
     .comments {
-        margin: 0 0 0 100px;
+        margin-top: 20px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid #e5e5e5;
+        color: #666;
+        line-height: 26px;
+        font-size: 14px;
     }
 </style>
