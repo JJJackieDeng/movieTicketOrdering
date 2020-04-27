@@ -7,7 +7,7 @@
                     type="card"
                     height="300px">
                 <el-carousel-item @click="preview(index)" v-for="item in imageHotsList" :key="item.id">
-                    <img :src="item.idView" class="carousel_pic"
+                    <img :src="item.movieInfo.poster" class="carousel_pic"
                          alt="图片被外星人偷走了">
                 </el-carousel-item>
             </el-carousel>
@@ -79,16 +79,9 @@
                     address: '',
                 }
                 ,
-                imageHotsList: [
-                    {id: 0, idView: require('../assets/img/hotsList/Movie1.jpg')},
-                    {id: 1, idView: require('../assets/img/hotsList/Movie2.jpg')},
-                    {id: 2, idView: require('../assets/img/hotsList/Movie3.jpg')},
-                    {id: 3, idView: require('../assets/img/hotsList/Movie4.jpg')},
-                    {id: 4, idView: require('../assets/img/hotsList/Movie5.jpg')},
-                    {id: 5, idView: require('../assets/img/hotsList/Movie5.jpg')},
-                ],
-
-
+                //热映影片图片
+                imageHotsList: [],
+                //所有影片图片
                 imgList: [],
                 scoreArr: []
             }
@@ -118,8 +111,18 @@
                 request({
                     url: 'api/movieInfo/queryOrderByScore',
                 }).then(res => {
-                    console.log(res);
                     this.scoreArr = res.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            getHots() {
+                request({
+                    url: 'api/order/selectHots',
+                }).then(res => {
+                    console.log(res);
+                    this.imageHotsList = res.data;
+                    console.log(this.imageHotsList);
                 }).catch(err => {
                     console.log(err);
                 });
@@ -128,7 +131,6 @@
                 request({
                     url: 'api/movie/selectAll?limit=100&offset=0',
                 }).then(res => {
-                    console.log(res);
                     this.imgList = res.data;
                 }).catch(err => {
                     console.log(err);
@@ -138,6 +140,7 @@
 
         created() {
             this.getScore();
+            this.getHots();
             this.getAllMovie();
         },
 
