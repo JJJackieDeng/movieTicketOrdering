@@ -37,7 +37,6 @@
                 <!--所有电影展示-->
                 <el-row>
                     <el-col v-for="(item, index) in imgList" :key="index" style="width: 300px">
-                        <!--                                                {{item}}-->
                         <el-card :body-style="{ padding: '0px' }"
                                  class="box-shadow box-radius m-10px">
                             {{item.poster}}
@@ -175,7 +174,7 @@
 
             .leftSide {
                 padding: 20px 0 0 20px;
-                width: 20vw;
+                width: 300px;
                 float: left;
                 background-color: #fffdf5;
             }
