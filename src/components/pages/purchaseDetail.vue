@@ -1,37 +1,76 @@
 <template>
     <div class="purchase">
         <!--选择场次-->
-        <div class="steps">
-            <el-steps :space="400" :active="1" finish-status="success">
-                <el-step title="选择影片场次"></el-step>
-                <el-step title="选择座位"></el-step>
-                <el-step title="三十分钟内付款"></el-step>
-                <el-step title="影院取票观影"></el-step>
-            </el-steps>
+        <div class="al-box-container">
+            <div class="steps">
+                <el-steps :space="1200" :active="1" finish-status="success" :align-center="true">
+                    <el-step title="选择影片场次"></el-step>
+                    <el-step title="选择座位"></el-step>
+                    <el-step title="三十分钟内付款"></el-step>
+                    <el-step title="影院取票观影"></el-step>
+                </el-steps>
+            </div>
         </div>
+
         <!--todo 选择影院-->
-        <div>选择影院：
-            <area-select :level="2" type="text" v-model="selected" :data="pcaa"></area-select>
-            {{selected}}}
+        <div class="al-flex-wrap al-flex-container-center-vh">
+
+            <div>选择影院：</div>
+
+            <div>
+                <area-select :level="2" type="text" v-model="selected" :data="pcaa"></area-select>
+            </div>
+
+
+            <div>
+                <span v-if="activeTimetable" class="al-text-color-light-red">{{item.schedule}}</span>
+            </div>
+
+            <div class="al-m-left-40px">
+                <el-button @click="getCinema">确定</el-button>
+            </div>
         </div>
-        <span>选择场次-></span>
-        <el-date-picker
-                v-model="date"
-                type="date"
-                :editable="false"
-                placeholder="场次日期选择"
-                value-format="yyyy-MM-dd"
-                @change="handleDateChange"
-                :picker-options="pickerOptions0">
-        </el-date-picker>
+
+        <!-- 显示影院列表 -->
+        <div class="al-flex-container-center-vh">
+
+            <div v-if="cinemas.length != 0">
+                <div class="al-show-border al-flex-justify-space-around">
+                    <div v-for="(item, index) in cinemas" :key="index">
+                        <div v-if="item != undefined" class="al-box-shadow-radius al-p-20px al-m-20px">
+                            {{item.cinemaName}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <div class="al-flex-container-center-vh">
+            <div>选择场次-></div>
+            <el-date-picker
+                    v-model="date"
+                    type="date"
+                    :editable="false"
+                    placeholder="场次日期选择"
+                    value-format="yyyy-MM-dd"
+                    @change="handleDateChange"
+                    :picker-options="pickerOptions0">
+            </el-date-picker>
+        </div>
+
         <div class="al-p-10px" v-if="schedule != null">
             <span v-for="(item, index) in schedule" :key="index">
                 <span
                         class="al-p-10px al-m-left-20px"
                         @click="getSeats(item.id)">
+                    <!--显示日期-->
                     <span v-if="activeTimetable" class="al-text-color-light-red">
                         {{item.schedule}}
                     </span>
+                    <!--显示开场时间-->
                     <span v-else>
                         {{item.schedule}}
                     </span>
@@ -87,7 +126,8 @@
                         </el-row>
                         <span>影院：</span><br>
                         <span>影厅：</span><br>
-                        <span>场次：<span style="color: red"> 周六 3月21日 14:00</span>
+                        <span>场次：
+                            <span style="color: red"> 周六 3月21日 14:00</span>
                         </span><br>
                         <span>座位：
                         </span><br>
@@ -110,8 +150,11 @@
                 width="30%"
                 :before-close="handleClose">
             <span>订单号：{{this.orderID}}</span><br>
-            <span>选择支付方式</span><br>
-            <span>选择支付方式</span><br>
+            <span>电影名称：</span><br>
+            <span>座位：</span><br>
+            <span>开场时间：</span><br>
+            <span>影院名称：</span><br>
+            <span>影院地址：</span><br>
             <span slot="footer" class="dialog-footer">
                                 <el-button @click="dialogVisible = false">取 消</el-button>
                                 <el-button type="primary" @click="toPay">确 定</el-button>
@@ -126,8 +169,8 @@
     import {querySeatById} from '../../api/seat'
     import {request} from "../../utils/request";
     import {pay} from "../../api/commonUrls";
+    import {selectByAddress} from "../../api/cinema";
     /*行政区域选择器支持*/
-    import {AreaCascader} from "vue-area-linkage"
     import {pca, pcaa} from 'area-data';
 
     export default {
@@ -158,8 +201,8 @@
                     seats: '',
                     /*根据这个查出cinema名称*/
                     cinemaId: '',
-                    /*放映日期与时间*/
-                    /*todo 还差一个放映厅  */
+                    /*放映厅名称、日期与时间*/
+                    room: '',
                     date: '',
                     runTime: '',
                     endTime: '',
@@ -174,9 +217,12 @@
                 timetable: [],
                 chooseDate: null,
                 activeTimetable: false,
+                activeCinemaTable: false,
                 /*进入页面时获取电影数据*/
                 movieInfo: {},
-                cinemaInfo: {}
+                cinemaInfo: {},
+
+                cinemas: [],
 
             }
 
@@ -202,7 +248,6 @@
             clickSeats(index) {
                 if (this.scheduleId != null && this.chooseDate != null) {
                     this.choseSeats(index);
-                    console.log(this.chooseSeats)
                 } else {
                     this.$message.warning("请先选择场次");
                 }
@@ -216,7 +261,8 @@
                 /*付款接口，其中orderID*/
                 let params = {};
                 pay({
-                    orderID: '12312312312312',
+                    orderID: this.orderID,
+                    //todo
                     total: '111',
                     movieName: '王炸',
                     discription: '测试'
@@ -237,9 +283,8 @@
             },
             //确定选座
             confirmSeats() {
-                console.log(this.chooseSeats.toString());
                 /*根据movieID查询当前电影的电影名称*/
-
+                console.log(this.schedule.date);
                 let params = {
                     rows: this.chooseSeats.toString(), //数组
                     /*todo scheduleID获取失败*/
@@ -247,6 +292,7 @@
                     /*场次接口，日期，开始时间与结束时间*/
                     order: {
                         date: this.chooseDate,
+                        //todo 未正确传值
                         runTime: this.schedule.schedule,
                         /*todo 未找到解决方案*/
                         endTime: '',
@@ -254,6 +300,7 @@
                         total: '',
                         /*必传*/
                         /*movie接口*/
+                        // movieName: this.movieInfo.movie.movieName,
                         movieName: this.movieInfo.movie.movieName,
                         /*cinema接口*/
                         address: '',
@@ -261,6 +308,7 @@
                     },
 
                 };
+                //todo
                 console.log(params);
                 request({
                     url: 'api/seat/add',
@@ -269,12 +317,12 @@
                     data: this.qsParam(params),
                     header: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(res => {
-                    // console.log(res)
                     if (res.data.code === 200) {
                         this.$message.success("选座成功！");
                         /*弹出支付页面*/
-                        this.orderID = res.data.msg.orderId;
-                        console.log(this.orderID);
+                        // console.log(res.data.data);
+                        this.orderID = res.data.data.orderId;
+                        // console.log(this.orderID);
                         this.dialogVisible = true;
                     } else if (res.data.code === 404) {
                         this.$message.error("座位已被选，请选择其他座位！");
@@ -285,6 +333,36 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+            /*根据影院地址查询影院*/
+            getCinema() {
+                let addressStr = "";
+                for (let s of this.selected) {
+                    addressStr += s;
+                }
+
+                console.log(addressStr);
+
+                selectByAddress({
+                    address: addressStr,                     //"辽宁省沈阳市和平区"
+                }, 'get').then(res => {
+                    return res.json();
+                }).then(res => {
+                    this.cinemas = res;
+                    //"辽宁省沈阳市和平区"
+                    console.log(res);
+
+                    // for (let item of res) {
+                    //     // console.log(item.);
+                    //     //this.getCinema(item.cinemaName);
+                    //     this.cinemas.push(item.cinemaName);
+                    //     //this.getSeats(item.id);
+                    // }
+
+
+                }).catch(err => {
+                    console.log(err);
+                })
             },
             //获取场次信息
             //这里获取场次的时候应该点击日期之后会有很多个时间段可以选择，然后再点击时间才能加载某个场次
@@ -304,7 +382,7 @@
 
                     for (let item of res.data) {
                         // console.log(item.date);
-                        this.getTimetable(item.schedule);
+                        //this.getTimetable(item.schedule);
                         this.timetable.push(item.schedule);
                         //this.getSeats(item.id);
                     }
@@ -314,29 +392,16 @@
                 })
             },
 
-            //选择场次时间
-            getTimetable(schedule) {
-                console.log(schedule);
-                // request({
-                //     url: 'api/schedule/queryByDate',
-                // }).then(res => {
-                //     console.log(res);
-                // }).catch(err => {
-                //     console.log(err);
-                // });
-            },
-
-
             //获取座位状态
             getSeats(scheduleId) {
                 this.activeTimetable = true;
-                console.log("activeTimetable: " + this.activeTimetable);
-                console.log(scheduleId);
+                // console.log("activeTimetable: " + this.activeTimetable);
+                // console.log(scheduleId);
                 this.scheduleId = scheduleId;
                 querySeatById({scheduleId: scheduleId}, 'get').then(res => {
                     return res.json()
                 }).then(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     for (let i of res.data) {
                         this.$set(this.isSell, i.row, true);
                     }
@@ -349,7 +414,7 @@
 
             handleDateChange(date) {
                 // this.date = date;
-                console.log(date);
+                // console.log(date);
                 this.chooseDate = date;
                 // this.$message.success(date);
                 this.getSchedule(date);
@@ -374,7 +439,7 @@
                 request({
                     url: 'api/movieInfo/selectOne?id=' + id,
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.movieInfo = res.data;
                 }).catch(err => {
                     console.log(err);
@@ -382,7 +447,7 @@
             },
 
             /**
-             * 获取影院信息
+             * todo选择影院之后再进行选择日期然后选择场次 获取影院信息
              * @param cinemaId
              */
             getCinemaInfo(cinemaId) {

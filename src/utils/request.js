@@ -12,6 +12,8 @@ import axios from 'axios';
 
 // let ip = "localhost";
 let ip = "localhost";
+//线上环境
+// let ip = "47.116.19.145";
 let port = "8081";
 
 let prefix = "http://" + ip + ':' + port + "/";
