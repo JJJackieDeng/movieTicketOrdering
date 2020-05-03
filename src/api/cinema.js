@@ -22,3 +22,12 @@ export function deleteCinema(data, methods) {
         headers: header
     })
 }
+
+
+/*根据地址查询影院*/
+export function selectByAddress(body, methods) {
+    return fetch('/front/api/cinema/selectByAddress?address=' + body.address, {
+        method: methods,
+        headers: header
+    })
+}
