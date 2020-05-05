@@ -15,17 +15,14 @@
         <!--todo 选择影院-->
         <div class="al-flex-wrap al-flex-container-center-vh">
 
-            <div>选择影院：</div>
+            <div>选择影院-></div>
 
             <div>
                 <area-select :level="2" type="text" v-model="selected" :data="pcaa"></area-select>
             </div>
-
-
             <!--            <div>-->
             <!--                <span v-if="activeTimetable" class="al-text-color-light-red">{{item.schedule}}</span>-->
             <!--            </div>-->
-
             <div class="al-m-left-40px">
                 <el-button @click="getCinema">确定</el-button>
             </div>
@@ -35,7 +32,7 @@
         <div class="al-flex-container-center-vh">
 
             <div v-if="cinemas.length != 0">
-                <div class="al-show-border al-flex-justify-space-around">
+                <div class="al-flex-justify-space-around">
                     <div v-for="(item, index) in cinemas" :key="index">
                         <div v-if="item != undefined" class="al-box-shadow-radius al-p-20px al-m-20px"
                              @click="convertDataToSelectSeatArea(item)">
@@ -145,7 +142,7 @@
                         </span><br>
                         <span>总价：</span><br>
 
-                        <div>
+                        <div style="margin: 20px 0 0 0;text-align: center">
                             <el-button type="success" @click="confirmSeats">推荐选座</el-button>
                             <el-button type="danger" @click="confirmSeats">确认选座</el-button>
                         </div>
@@ -165,10 +162,10 @@
             <span>开场时间：</span><br>
             <span>影院名称：</span><br>
             <span>影院地址：</span><br>
-            <span slot="footer" class="dialog-footer">
-                                <el-button @click="dialogVisible = false">取 消</el-button>
-                                <el-button type="primary" @click="toPay">确 定</el-button>
-                            </span>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false" type="error">稍后支付</el-button>
+                <el-button type="primary" @click="toPay">立即支付</el-button>
+            </div>
         </el-dialog>
     </div>
 
@@ -717,6 +714,10 @@
     }
 
     .title {
+        text-align: center;
+    }
+
+    .dialog-footer {
         text-align: center;
     }
 

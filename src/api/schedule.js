@@ -14,7 +14,7 @@ export function AllSchedule(body, methods) {
 
 /*根据日期与movie_id获取场次信息*/
 export function AllScheduleByDate(body, methods) {
-    return fetch('/front/api/schedule/queryByDate?dateStr=' + body.dateStr + '&movie_id=' + body.movie_id, {
+    return fetch('/front/api/schedule/queryByDate?dateStr=' + body.dateStr + '&movie_id=' + body.movie_id + '&cinema_id=' + body.cinema_id, {
         method: methods,
         headers: header
     })
