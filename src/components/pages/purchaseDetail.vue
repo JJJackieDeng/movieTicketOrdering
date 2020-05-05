@@ -22,9 +22,9 @@
             </div>
 
 
-            <div>
-                <span v-if="activeTimetable" class="al-text-color-light-red">{{item.schedule}}</span>
-            </div>
+            <!--            <div>-->
+            <!--                <span v-if="activeTimetable" class="al-text-color-light-red">{{item.schedule}}</span>-->
+            <!--            </div>-->
 
             <div class="al-m-left-40px">
                 <el-button @click="getCinema">确定</el-button>
@@ -37,7 +37,8 @@
             <div v-if="cinemas.length != 0">
                 <div class="al-show-border al-flex-justify-space-around">
                     <div v-for="(item, index) in cinemas" :key="index">
-                        <div v-if="item != undefined" class="al-box-shadow-radius al-p-20px al-m-20px">
+                        <div v-if="item != undefined" class="al-box-shadow-radius al-p-20px al-m-20px"
+                             @click="convertDataToSelectSeatArea(item)">
                             {{item.cinemaName}}
                         </div>
                     </div>
@@ -64,8 +65,8 @@
         <div class="al-p-10px" v-if="schedule != null">
             <span v-for="(item, index) in schedule" :key="index">
                 <span
-                        class="al-p-10px al-m-left-20px"
-                        @click="getSeats(item.id)">
+                        class="al-p-10px al-m-left-20px al-cursor-pointer"
+                        @click="getSeats(item.id, item.schedule)">
                     <!--显示日期-->
                     <span v-if="activeTimetable" class="al-text-color-light-red">
                         {{item.schedule}}
@@ -100,8 +101,10 @@
                         银幕中央
                         <!--                        <div class"mid-line"=></div>-->
                     </div>
+
                     <!--主要业务功能实现-->
                     <div class="seatChoose">
+
                         <!--根据座位是否已售来判断是否可选；如果可选，根据是否已点击来显示座位状态-->
                         <span v-for="(li,index) in 200"
                               :class="[isSell[index]?'bg-sited':isClick[index]?'bg-beChosen':'bg-sit']" :key="index"
@@ -124,11 +127,18 @@
                                 <span>时长：{{movieInfo.movieLength}}分钟</span>
                             </el-col>
                         </el-row>
-                        <span>影院：</span><br>
-                        <span>影厅：</span><br>
-                        <span>场次：
-                            <span style="color: red"> 周六 3月21日 14:00</span>
-                        </span><br>
+                        <div>
+                            影院： {{orderInfo.cinema}}
+                        </div>
+
+                        <div>
+                            影厅： {{orderInfo.room}}
+                        </div>
+                        <div>
+                            场次：
+                            <span style="color: red"
+                                  v-if="this.chooseDate != undefined"> {{orderInfo.schedule.date}}</span>
+                        </div>
                         <span>座位：
                         </span><br>
                         <span>票价：<span style="color: #39ac6a">74￥/座</span>
@@ -224,12 +234,29 @@
 
                 cinemas: [],
 
+                orderInfo: {
+                    cinema: '',
+                    room: '',
+                    /*时间日期显示*/
+                    schedule: {
+                        date: '',
+                        time: '',
+                    },
+                    seat: '',
+                    price: 0.0,
+                    totalPrice: 0.0
+                },
+
+
+                // tempAddress: "广东省广州市番禺区",
+
             }
 
         },
         methods: {
             //判断是否选中座位
             choseSeats(index) {
+
                 if (this.chooseSeats.length !== 0) {
                     let index2 = this.chooseSeats.indexOf(index);
                     if (index2 === -1) {
@@ -243,9 +270,15 @@
                     this.chooseSeats.push(index);
                     this.$set(this.isClick, index, true);
                 }
+
+                console.log(this.isClick)
             },
+
+
             //选座
             clickSeats(index) {
+                // this.$message.success(this.scheduleId + this.chooseDate);
+                //this.scheduleId != null && this.chooseDate != null
                 if (this.scheduleId != null && this.chooseDate != null) {
                     this.choseSeats(index);
                 } else {
@@ -253,10 +286,14 @@
                 }
 
             },
+
+
             cantSelect() {
                 this.$message.warning("该座位已售！");
                 return false;
             },
+
+
             toPay() {
                 /*付款接口，其中orderID*/
                 let params = {};
@@ -269,7 +306,7 @@
                 }, 'post').then(res => {
                     return res.json();
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     document.querySelector('body').innerHTML = res;
                     // 创建div
                     const div = document.createElement('div');
@@ -281,10 +318,12 @@
                     console.log(err);
                 })
             },
+
+
             //确定选座
             confirmSeats() {
                 /*根据movieID查询当前电影的电影名称*/
-                console.log(this.schedule.date);
+                // console.log(this.schedule.date);
                 let params = {
                     rows: this.chooseSeats.toString(), //数组
                     /*todo scheduleID获取失败*/
@@ -309,7 +348,7 @@
 
                 };
                 //todo
-                console.log(params);
+                // console.log(params);
                 request({
                     url: 'api/seat/add',
                     method: 'post',
@@ -327,13 +366,15 @@
                     } else if (res.data.code === 404) {
                         this.$message.error("座位已被选，请选择其他座位！");
                     } else {
-                        console.log(res.data.code);
+                        // console.log(res.data.code);
                         this.$message.error("选座失败！");
                     }
                 }).catch(err => {
                     console.log(err);
                 });
             },
+
+
             /*根据影院地址查询影院*/
             getCinema() {
                 let addressStr = "";
@@ -341,7 +382,7 @@
                     addressStr += s;
                 }
 
-                console.log(addressStr);
+                // console.log(addressStr);
 
                 selectByAddress({
                     address: addressStr,                     //"辽宁省沈阳市和平区"
@@ -350,7 +391,7 @@
                 }).then(res => {
                     this.cinemas = res;
                     //"辽宁省沈阳市和平区"
-                    console.log(res);
+                    // console.log(res);
 
                     // for (let item of res) {
                     //     // console.log(item.);
@@ -364,19 +405,28 @@
                     console.log(err);
                 })
             },
+
+
             //获取场次信息
             //这里获取场次的时候应该点击日期之后会有很多个时间段可以选择，然后再点击时间才能加载某个场次
             getSchedule(date) {
+                this.schedule = []
+                const array = this.cinemas.filter(item => item.cinemaName === this.orderInfo.cinema)
+                console.log(array[0].id)
+                if (array.length !== 1) {
+                    this.$message.warning('选择影院出现问题')
+                }
                 AllScheduleByDate({
                     dateStr: date,
                     movie_id: this.id,
+                    cinema_id: array[0].id + '',
                 }, 'get').then(res => {
                     return res.json()
                 }).then(res => {
                     this.schedule = res.data;
-                    console.log("scheduleInfo: ");
-                    console.log(this.schedule);
-
+                    // console.log("scheduleInfo: ");
+                    // console.log(this.schedule);
+                    console.log(this.schedule)
                     //获取影院信息
                     this.getCinemaInfo(this.schedule[0].cinema_id);
 
@@ -392,16 +442,18 @@
                 })
             },
 
+
             //获取座位状态
-            getSeats(scheduleId) {
+            getSeats(scheduleId, schedule) {
+                this.convertDataToSelectSeatArea2(schedule);
                 this.activeTimetable = true;
-                // console.log("activeTimetable: " + this.activeTimetable);
-                // console.log(scheduleId);
+                console.log("activeTimetable: " + this.activeTimetable);
+                console.log(scheduleId);
                 this.scheduleId = scheduleId;
                 querySeatById({scheduleId: scheduleId}, 'get').then(res => {
                     return res.json()
                 }).then(res => {
-                    // console.log(res.data);
+                    console.log(res.data);
                     for (let i of res.data) {
                         this.$set(this.isSell, i.row, true);
                     }
@@ -412,14 +464,19 @@
                 })
             },
 
+
             handleDateChange(date) {
                 // this.date = date;
                 // console.log(date);
                 this.chooseDate = date;
+
+                this.orderInfo.schedule.date = this.chooseDate;
                 // this.$message.success(date);
                 this.getSchedule(date);
 
             },
+
+
             /*处理弹窗界面*/
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -446,6 +503,7 @@
                 });
             },
 
+
             /**
              * todo选择影院之后再进行选择日期然后选择场次 获取影院信息
              * @param cinemaId
@@ -454,13 +512,34 @@
                 request({
                     url: 'api/cinema/selectOne?id=' + cinemaId,
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.cinemaInfo = res.data;
-                    console.log(this.cinema);
+                    // console.log(this.cinema);
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+
+
+            /**
+             * 传送数据到选座区域
+             * @param item
+             */
+            convertDataToSelectSeatArea(item) {
+                console.log(item);
+                this.orderInfo.cinema = item.cinemaName;
+                this.orderInfo.room = item.room;
+                this.orderInfo.schedule.date = this.schedule.date + " " + this.schedule.schedule;
+
+            },
+
+            convertDataToSelectSeatArea2(time) {
+
+                this.orderInfo.schedule.date = this.chooseDate + " " + time;
+
+                //this.$message.success(this.scheduleId + " " + this.chooseDate);
             }
+
         },
         // 过滤器
         filters: {
@@ -486,6 +565,8 @@
         mounted() {
             // this.getSeats();
             this.getMovieInfoById(this.$route.params.mid);
+
+            // this.getCinema();
 
         }
 
@@ -641,7 +722,7 @@
 
     .seat-wrapper {
         height: 700px;
-        width: 1000px;
+        width: 100%;
         border: 1px dotted #c5c5c5;
         margin: 0 auto;
         position: relative;
