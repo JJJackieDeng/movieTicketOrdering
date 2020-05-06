@@ -84,13 +84,15 @@
                                 })
                             }
                         ).then(res => {
-                            console.log(res);
+                            // console.log(res);
                             return res.json();
                         }).then(res => {
 
                             if (res.code === 200) {
                                 this.$message.success("登录成功！");
-                                console.log(res);
+                                //使用sessionStorage保存token
+                                sessionStorage.setItem("token", res.data)
+                                console.log(sessionStorage);
                                 this.$router.push({path: '/home'})
                             } else if (res.code === 10001) {
                                 this.$message.error("登录失败！请联系管理员")
@@ -123,7 +125,6 @@
 
 <style lang="scss" scoped>
     #poster {
-        /*background: url("../assets/img/Luffy2.jpg") no-repeat center;*/
         background: url("../assets/img/Xujinjiang.jpg") no-repeat center;
         height: 100%;
         width: 100%;
