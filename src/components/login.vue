@@ -92,7 +92,7 @@
                                 this.$message.success("登录成功！");
                                 //使用sessionStorage保存token
                                 sessionStorage.setItem("token", res.data)
-                                console.log(sessionStorage);
+                                // console.log(sessionStorage);
                                 this.$router.push({path: '/home'})
                             } else if (res.code === 10001) {
                                 this.$message.error("登录失败！请联系管理员")
