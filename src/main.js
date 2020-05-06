@@ -91,15 +91,15 @@ Vue.filter('dateFmt', (input, formatString = "YYYY-MM-DD") => {
 });
 
 
-// 挂载路由导航守卫,不需要进行登录便可以浏览一些界面
-// router.beforeEach(( to , from , next )=>{
-//     const name = localStorage.getItem('loginToken');
-//     if( name || to.path === '/login'){
-//         next()
-//     }else{
-//         next('/login')
-//     }
-// });
+// // 挂载路由导航守卫,不需要进行登录便可以浏览一些界面
+router.beforeEach((to, from, next) => {
+    const token = sessionStorage.getItem('loginToken');
+    if (token || to.path === '/login' || to.path == '/home' || to.path.indexOf('/showDetail') !== -1) {
+        next()
+    } else {
+        next('/login')
+    }
+});
 
 
 Vue.prototype.qsParam = function (data) {
