@@ -2,13 +2,16 @@
     <!--公共顶部-->
     <div id="Header">
             <el-header>
+                <!--                <div>-->
+                <!--                    <input  class="input" type="text">-->
+                <!--                </div>-->
                 <div class="headerRight">
                     <el-dropdown>
-                                <span>
-                                    <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
-                                    <!--todo 目前获取不 了,需要访问登录状态-->
-                                    <!--                                 {{userName}}-->
-                                </span>
+                            <span v-if="base64">
+                                <!--todo 目前获取不 了,需要访问登录状态-->
+                                 {{this.afterBase64}}
+                                <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
+                            </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item icon="el-icon-user" split-button="true">
                                 <span @click="toHome">首页</span>
@@ -27,6 +30,25 @@
 </template>
 
 <script>
+    let afterBase64 = new Array();
+    let Base64 = require('js-base64').Base64
+    let token = sessionStorage.getItem("token");
+    let arr = new Array();
+    arr = token.split(".");
+    if (token !== null) {
+        //解析token
+        afterBase64 = Base64.decode(arr[1]);
+        console.log(afterBase64)
+        // for (var i=0;i<arr.length;i++){
+        //     afterBase64 = Base64.decode(arr[i]);
+        //     console.log("----------------------------");
+        //     console.log(i)
+        //     console.log(afterBase64);
+        //
+        // }
+    }
+    // console.log(arr);
+    // console.log(token);
     export default {
         name: "Header",
         data() {
@@ -60,11 +82,20 @@
     .el-header {
         background-color: #262626;
         color: #ffffff;
-        text-align: right;
+        /*text-align: right;*/
         line-height: 60px;
         /*position: absolute;*/
-        right: 20px;
+        /*right: 20px;*/
         vertical-align: middle;
         align-items: center;
+    }
+
+    .headerRight {
+        right: 20px;
+        text-align: right;
+    }
+
+    .input {
+        border-radius: 2px;
     }
 </style>
