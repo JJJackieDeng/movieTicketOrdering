@@ -7,9 +7,8 @@
                 <!--                </div>-->
                 <div class="headerRight">
                     <el-dropdown>
-                            <span v-if="base64">
-                                <!--todo 目前获取不 了,需要访问登录状态-->
-                                 {{this.afterBase64}}
+                            <span>
+<!--                                 {{this.afterBase64}}-->
                                 <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
                             </span>
                         <el-dropdown-menu slot="dropdown">
@@ -31,12 +30,15 @@
 
 <script>
     let afterBase64 = new Array();
+    var map = new Map();
     let Base64 = require('js-base64').Base64
     let token = sessionStorage.getItem("token");
     let arr = new Array();
-    arr = token.split(".");
+
+    arr = (token || "").split('.');
     if (token !== null) {
         //解析token
+        console.log(arr[1])
         afterBase64 = Base64.decode(arr[1]);
         console.log(afterBase64)
         // for (var i=0;i<arr.length;i++){
