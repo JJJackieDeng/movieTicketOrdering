@@ -12,8 +12,8 @@
                                 <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
                             </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item icon="el-icon-s-home" split-button="true">
-                                <span @click="toHome">首页</span>
+                            <el-dropdown-item icon="el-icon-s-home" @click.native="toHome" split-button="true">
+                                <span>首页</span>
                             </el-dropdown-item>
                             <el-dropdown-item icon="el-icon-user" split-button="true">
                                 <span @click="logout">注销</span>
