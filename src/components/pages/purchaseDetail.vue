@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <!--todo 选择影院-->
+        <!--选择影院-->
         <div class="al-flex-wrap al-flex-container-center-vh">
 
             <div>选择影院-></div>
@@ -136,14 +136,16 @@
                             <span style="color: red"
                                   v-if="this.chooseDate != undefined"> {{orderInfo.schedule.date}}</span>
                         </div>
-                        <span>座位：
+                        <!--for循环输出展示座位-->
+                        <span>座位：{{decodeSeats}}
                         </span><br>
                         <span>票价：<span style="color: #39ac6a">74￥/座</span>
                         </span><br>
                         <span>总价：</span><br>
 
                         <div style="margin: 20px 0 0 0;text-align: center">
-                            <el-button type="success" @click="confirmSeats">推荐选座</el-button>
+                            <!--                            在当前场次中选择单个可选座位，-->
+                            <el-button type="success">推荐选座</el-button>
                             <el-button type="danger" @click="confirmSeats">确认选座</el-button>
                         </div>
                     </div>
@@ -157,13 +159,14 @@
                 width="30%"
                 :before-close="handleClose">
             <span>订单号：{{this.orderID}}</span><br>
-            <span>电影名称：</span><br>
+            <span>电影名称： {{movieInfo.movie.movieName}}</span><br>
             <span>座位：</span><br>
-            <span>开场时间：</span><br>
-            <span>影院名称：</span><br>
+            <!--            日期与具体开场时间-->
+            <span>开场时间：{{orderInfo.schedule.date}} </span><br>
+            <span>影院名称：{{orderInfo.cinema}}</span><br>
             <span>影院地址：</span><br>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false" type="error">稍后支付</el-button>
+                <el-button @click="dialogVisible = false" type="danger">稍后支付</el-button>
                 <el-button type="primary" @click="toPay">立即支付</el-button>
             </div>
         </el-dialog>
@@ -243,6 +246,7 @@
                     price: 0.0,
                     totalPrice: 0.0
                 },
+                decodeSeats: [],
 
 
                 // tempAddress: "广东省广州市番禺区",
@@ -253,7 +257,6 @@
         methods: {
             //判断是否选中座位
             choseSeats(index) {
-
                 if (this.chooseSeats.length !== 0) {
                     let index2 = this.chooseSeats.indexOf(index);
                     if (index2 === -1) {
@@ -267,8 +270,7 @@
                     this.chooseSeats.push(index);
                     this.$set(this.isClick, index, true);
                 }
-
-                console.log(this.isClick)
+                //console.log(this.chooseSeats)
             },
 
 
@@ -296,10 +298,10 @@
                 let params = {};
                 pay({
                     orderID: this.orderID,
-                    //todo
+                    //todo 订单总价
                     total: '111',
-                    movieName: '王炸',
-                    discription: '测试'
+                    movieName: this.movieInfo.movie.movieName,
+                    discription: this.movieInfo.introduce
                 }, 'post').then(res => {
                     return res.json();
                 }).then(res => {
@@ -344,7 +346,6 @@
                     },
 
                 };
-                //todo
                 // console.log(params);
                 request({
                     url: 'api/seat/add',
@@ -418,12 +419,16 @@
                     movie_id: this.id,
                     cinema_id: array[0].id + '',
                 }, 'get').then(res => {
+                    console.log(res.data);
+                    if (res.data === '') {
+                        this.$message("今日该影院暂无该影片场次信息");
+                    }
                     return res.json()
                 }).then(res => {
                     this.schedule = res.data;
                     // console.log("scheduleInfo: ");
                     // console.log(this.schedule);
-                    console.log(this.schedule)
+                    // console.log(this.schedule)
                     //获取影院信息
                     this.getCinemaInfo(this.schedule[0].cinema_id);
 
@@ -444,13 +449,13 @@
             getSeats(scheduleId, schedule) {
                 this.convertDataToSelectSeatArea2(schedule);
                 this.activeTimetable = true;
-                console.log("activeTimetable: " + this.activeTimetable);
-                console.log(scheduleId);
+                // console.log("activeTimetable: " + this.activeTimetable);
+                // console.log(scheduleId);
                 this.scheduleId = scheduleId;
                 querySeatById({scheduleId: scheduleId}, 'get').then(res => {
                     return res.json()
                 }).then(res => {
-                    console.log(res.data);
+                    // console.log(res.data);
                     for (let i of res.data) {
                         this.$set(this.isSell, i.row, true);
                     }
@@ -519,11 +524,11 @@
 
 
             /**
-             * 传送数据到选座区域
+             * 将数据整合并存入后在右侧订单信息显示,
              * @param item
              */
             convertDataToSelectSeatArea(item) {
-                console.log(item);
+                // console.log(item);
                 this.orderInfo.cinema = item.cinemaName;
                 this.orderInfo.room = item.room;
                 this.orderInfo.schedule.date = this.schedule.date + " " + this.schedule.schedule;
@@ -556,7 +561,8 @@
             price(data) {
                 let price = parseFloat(data);
                 return price.toFixed(2);
-            }
+            },
+
         },
 
         mounted() {
@@ -565,6 +571,18 @@
 
             // this.getCinema();
 
+        },
+
+        watch: {
+            chooseSeats(newVal, oldVal) {
+                newVal.map((item) => {
+                    //第几排，row
+                    var lie = item % 20;
+                    //第几座，column
+                    var pai = parseInt(item / 20);
+                    this.decodeSeats.push([(pai + 1) + "排", (lie + 1) + "列"]);
+                })
+            }
         }
 
     }
@@ -577,6 +595,12 @@
         margin: 0;
         padding: 0;
         height: 100%;
+    }
+
+    .purchase {
+        min-width: 1420px;
+        max-width: 1420px;
+        margin: 20px 0 0 30px;
     }
 
     .payChooseWrapper {
