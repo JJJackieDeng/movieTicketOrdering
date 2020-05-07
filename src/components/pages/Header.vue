@@ -30,28 +30,14 @@
 
 <script>
     import {request} from "../../utils/request";
+    import eventBus from "../../utils/eventBus";
 
-    let name = undefined
-    let afterBase64 = new Array();
-    var map = new Map();
-    let Base64 = require('js-base64').Base64
-    let token = sessionStorage.getItem("token");
-    let arr = new Array();
 
-    arr = (token || "").split('.');
-    if (token !== null) {
-        //解析token
-        console.log(arr[1])
-        afterBase64 = Base64.decode(arr[1]);
-        const data = JSON.parse(afterBase64)
-        name = data.userName
-        console.log(afterBase64)
-    }
     export default {
         name: "Header",
         data() {
             return {
-                afterBase64,
+                //afterBase64,
                 name
             };
         },
@@ -61,21 +47,22 @@
             },
 
             logout() {
-                let params = {
-                    httpSession: this.token,
-                };
+                // let params = {
+                //     httpSession: this.token,
+                // };
                 request({
-                    url: 'api/logout',
-                    method: 'post',
-                    data: this.qsParam(params),
+                    url: 'api/user/logout',
+                    method: 'get',
+                    //data: this.qsParam(params),
                     header: {'Content-Type': 'application/json'}
                 }).then(res => {
-                    if (res.code === 10004) {
-                        this.$message("注销成功！请重新登录");
-                        this.$router.push("/login")
-                    } else {
-                        this.$message("注销出现了一点问题，请重试~");
-                    }
+                    this.$router.push("/login")
+                    // if (res.code === 10004) {
+                    //     this.$message("注销成功！请重新登录");
+                    //     this.$router.push("/login")
+                    // } else {
+                    //     this.$message("注销出现了一点问题，请重试~");
+                    // }
                 }).catch(err => {
                     console.log(err);
                 })
@@ -92,8 +79,41 @@
             },
             toPersonal() {
                 this.$router.push('/personal');
+            },
+
+
+            init() {
+
+                let name = undefined
+                let afterBase64 = new Array();
+                var map = new Map();
+                let Base64 = require('js-base64').Base64
+                let token = sessionStorage.getItem("token");
+                let arr = new Array();
+
+                arr = (token || "").split('.');
+                if (token !== null) {
+                    //解析token
+                    console.log(arr[1])
+                    afterBase64 = Base64.decode(arr[1]);
+                    const data = JSON.parse(afterBase64)
+                    name = data.userName;
+                    let Id = data.userId;
+                    console.log(afterBase64)
+                    //console.log(Id);
+
+
+                }
             }
+        },
+
+        created() {
+            this.init();
+            this.$store.state
+
         }
+
+
     }
 </script>
 
