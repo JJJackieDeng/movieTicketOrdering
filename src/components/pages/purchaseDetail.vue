@@ -137,11 +137,11 @@
                                   v-if="this.chooseDate != undefined"> {{orderInfo.schedule.date}}</span>
                         </div>
                         <!--for循环输出展示座位-->
-                        <span>座位：{{decodeSeats}}
+                        <span>座位：<span v-for="(i,index) in chooseSeats" :key="index">{{i | decodeSeats}}</span>
                         </span><br>
                         <span>票价：<span style="color: #39ac6a">74￥/座</span>
                         </span><br>
-                        <span>总价：</span><br>
+                        <span>总价：{{chooseSeats.length * 74}}</span><br>
 
                         <div style="margin: 20px 0 0 0;text-align: center">
                             <!--                            在当前场次中选择单个可选座位，-->
@@ -246,7 +246,6 @@
                     price: 0.0,
                     totalPrice: 0.0
                 },
-                decodeSeats: [],
 
 
                 // tempAddress: "广东省广州市番禺区",
@@ -257,6 +256,7 @@
         methods: {
             //判断是否选中座位
             choseSeats(index) {
+
                 if (this.chooseSeats.length !== 0) {
                     let index2 = this.chooseSeats.indexOf(index);
                     if (index2 === -1) {
@@ -270,7 +270,6 @@
                     this.chooseSeats.push(index);
                     this.$set(this.isClick, index, true);
                 }
-                //console.log(this.chooseSeats)
             },
 
 
@@ -563,6 +562,13 @@
                 return price.toFixed(2);
             },
 
+            decodeSeats(val) {
+                var pai = parseInt(val / 20) + 1;
+                var zuo = (val % 20) + 1;
+                return `${pai}排${zuo}座` + ","
+
+            }
+
         },
 
         mounted() {
@@ -572,18 +578,6 @@
             // this.getCinema();
 
         },
-
-        watch: {
-            chooseSeats(newVal, oldVal) {
-                newVal.map((item) => {
-                    //第几排，row
-                    var lie = item % 20;
-                    //第几座，column
-                    var pai = parseInt(item / 20);
-                    this.decodeSeats.push([(pai + 1) + "排", (lie + 1) + "列"]);
-                })
-            }
-        }
 
     }
 
