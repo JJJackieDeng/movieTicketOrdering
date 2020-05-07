@@ -11,11 +11,11 @@
                              @close="handleClose"
                              :collapse="isCollapse">
                         <el-menu-item index="1" @click="toMyInfo">
-                            <i class="el-icon-menu"></i>
+                            <i class="el-icon-user"></i>
                             <span slot="title">我的个人资料</span>
                         </el-menu-item>
                         <el-menu-item index="2" @click="toMyOrders">
-                            <i class="el-icon-menu"></i>
+                            <i class="el-icon-goods"></i>
                             <span slot="title">订单中心</span>
                         </el-menu-item>
                     </el-menu>
