@@ -31,3 +31,11 @@ export function selectByAddress(body, methods) {
         headers: header
     })
 }
+
+/*根据影院名称模糊查询影院*/
+export function selectByName(body, methods) {
+    return fetch('/front/api/cinema/selectByName?cinemaName=' + body, {
+        method: methods,
+        headers: header
+    })
+}
