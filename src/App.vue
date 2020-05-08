@@ -9,6 +9,7 @@
 <script>
     import Header from "./components/pages/Header";
     import Footer from "./components/pages/Footer";
+    import eventBus from "./utils/eventBus";
     export default {
         name: "app",
         components: {Header,Footer},
@@ -22,6 +23,14 @@
             getHeader(val){
                 this.header_show = val;
             }
+        },
+        created() {
+            this.$emit("test", 1111);
+
+
+        },
+        mounted() {
+
         }
     };
 </script>
