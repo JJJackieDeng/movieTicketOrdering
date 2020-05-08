@@ -12,7 +12,7 @@
                     </el-input>
                 </el-form-item>
                 <el-button icon="el-icon-search"></el-button>
-                <el-button type="primary" plain>新增场次</el-button>
+                <el-button type="primary" plain @click="dialogVisible=true">新增场次</el-button>
             </el-form>
         </div>
         <el-container>
@@ -69,8 +69,42 @@
                         :total="total"
                 ></el-pagination>
             </el-main>
-
         </el-container>
+
+        <!--新增影院-->
+        <el-dialog
+                title="新增场次"
+                :visible.sync="dialogVisible"
+                width="35%"
+                :before-close="handleClose"
+                center="true"
+                destroy-on-close="true">
+            <el-form ref="form" :model="tableData" label-width="80px">
+                <el-form-item label="影院" prop="cinema_id">
+                    <el-input type="text" v-model="scheduleForm.cinema_id"></el-input>
+                </el-form-item>
+                <el-form-item label="放映厅" prop="room">
+                    <el-input v-model="scheduleForm.room"></el-input>
+                </el-form-item>
+                <el-form-item label="影片名称" prop="seats">
+                    <el-input v-model="scheduleForm.seats"></el-input>
+                </el-form-item>
+                <el-form-item label="场次日期" prop="telephone">
+                    <el-input v-model="scheduleForm.telephone"></el-input>
+                </el-form-item>
+                <el-form-item label="开场时间" prop="address">
+                    <el-date-picker
+                            v-model="scheduleForm.address"
+                            type="date"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addSchedule">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -84,6 +118,8 @@
         data() {
             return {
                 input: '',
+                /*是否弹出新增场次界面，默认为否*/
+                dialogVisible: false,
                 /*用户数据获取*/
                 scheduleForm: {
                     id: '',
@@ -99,6 +135,15 @@
             }
         },
         methods: {
+            /*处理弹窗界面*/
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
             GetTableData() {
                 schedule.AllSchedule({
                     limit: this.limit,
@@ -145,6 +190,34 @@
                         type: 'info',
                         message: '已取消删除'
                     });
+                });
+            },
+            addSchedule() {
+                let params = {
+                    cinema_id: this.schedule.cinema_id,
+                    room: this.schedule.room,
+                    schedule: this.schedule.schedule,
+                    movie_id: this.schedule.movie_id,
+                    date: this.schedule.date
+                };
+                request({
+                    url: 'api/schedule/add',
+                    method: 'post',
+                    data: JSON.stringify(params),
+                    header: {'Content-Type': 'application/json'}
+                }).then(res => {
+                        if (res.data.code === 200) {
+                            this.$message.success("新增成功");
+                            /*删除之后重新查询数据*/
+                            this.GetTableData();
+                        } else {
+                            this.$message.error("请求错误，新增失败！！");
+                        }
+                    }
+                ).catch(function (err) {
+                    if (err.response) {
+                        console.log(err.response);
+                    }
                 });
             },
         },
