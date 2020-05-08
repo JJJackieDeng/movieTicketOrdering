@@ -40,7 +40,7 @@
                             label="电影名称"
                             width="100">
                     </el-table-column>
-                    <!--todo 收起与展开电影简介-->
+                    <!-- 收起与展开电影简介-->
                     <el-table-column
                             class="expansion"
                             prop="movieInfo.introduce"
@@ -70,7 +70,7 @@
                     <el-table-column label="操作" width="200px">
                         <template>
                             <el-button type="success" @click="toDelete">修改</el-button>
-                            <br><br>
+
                             <el-button type="danger" @click="toDelete">下架</el-button>
                         </template>
                     </el-table-column>
@@ -83,53 +83,54 @@
         <el-dialog
                 title="电影上新"
                 :visible.sync="dialogVisible"
-                width="35%"
+                width="500px"
                 style="height: 800px"
                 :before-close="handleClose"
                 center="true"
                 lock-scroll="false">
             <div>
-                <span>电影名称:
-                    <el-input style="width: 350px"></el-input>
-                </span><br>
-                <span>外文名称:
-                    <el-input style="width: 350px"></el-input>
-                </span><br>
-                <span>电影简介:
-                    <el-input type="textarea" style="width: 350px"></el-input>
-                </span><br>
-                <span>导&nbsp; &nbsp;&nbsp;&nbsp;演:
-                    <el-input style="width: 350px"></el-input>
-                </span><br>
-                <span>演员:
-                    <el-input style="width: 350px"></el-input>
-                </span><br>
-                <span>电影时长:
-                    <el-input placeholder="单位：分钟" style="width: 350px"></el-input>
-                </span><br>
+                <div class="al-m-bottom-10px">电影名称:
+                    <el-input style="width: 350px" v-model="movieForm.movieName"></el-input>
+                </div>
+                <div class="al-m-bottom-10px">外文名称:
+                    <el-input style="width: 350px" v-model="movieForm.foreign"></el-input>
+                </div>
+                <div class="al-m-bottom-10px">电影简介:
+                    <el-input type="textarea" style="width: 350px" v-model="movieForm.introduce"></el-input>
+                </div>
+                <div class="al-m-bottom-10px">导<span style="opacity: 0">哈哈</span>演:
+                    <el-input style="width: 350px" v-model="movieForm.director"></el-input>
+                </div>
+                <div class="al-m-bottom-10px">演<span style="opacity: 0">哈哈</span>员:
+                    <el-input style="width: 350px" v-model="movieForm.actors"></el-input>
+                </div>
+                <div class="al-m-bottom-10px">电影时长:
+                    <el-input placeholder="单位：分钟" style="width: 350px" v-model="movieForm.movieLength"></el-input>
+                </div>
 
-                <span>上映时间:
-                    <el-input placeholder="何时何地在何处上映" style="width: 350px"></el-input>
-                </span><br>
-                <span>宣传海报:
-                    <el-upload
-                            class="upload"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
-                            :before-remove="beforeRemove"
-                            list-type="picture"
-                            :limit="1"
-                            :on-exceed="handleExceed"
-                            :file-list="fileList">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                    </el-upload>
-                </span>
+                <div class="al-m-bottom-10px">上映时间:
+                    <el-input placeholder="何时何地在何处上映" style="width: 350px" v-model="movieForm.release"></el-input>
+                </div>
+                <div class="al-m-bottom-10px">宣传海报:
+                    <el-input placeholder="海报在线图片地址" style="width: 350px" v-model="movieForm.poster"></el-input>
+                    <!--                    <el-upload-->
+                    <!--                            class="upload"-->
+                    <!--                            action="https://jsonplaceholder.typicode.com/posts/"-->
+                    <!--                            :on-preview="handlePreview"-->
+                    <!--                            :on-remove="handleRemove"-->
+                    <!--                            :before-remove="beforeRemove"-->
+                    <!--                            list-type="picture"-->
+                    <!--                            :limit="1"-->
+                    <!--                            :on-exceed="handleExceed"-->
+                    <!--                            :file-list="movieForm.poster">-->
+                    <!--                        <el-button size="small" type="primary">点击上传</el-button>-->
+                    <!--                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                    <!--                    </el-upload>-->
+                </div>
             </div>
             <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="update">确 定</el-button>
+                    <el-button type="primary" @click="addMovie()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -163,8 +164,8 @@
                 /*是否弹出电影上新界面，默认为否*/
                 dialogVisible: false,
                 tableData: [],
-                limit: 20, // todo ,每页查询多少个
-                offset: 0, //todo 从第一个开始查
+                limit: 20,
+                offset: 0,
             }
         },
         methods: {
@@ -194,6 +195,34 @@
                     // }
                 }).catch(err => {
                     console.log(err)
+                })
+            },
+            /*新增影片*/
+            addMovie() {
+                let params = {
+                    poster: this.movieForm.poster,
+                    foreign: this.movieForm.foreign,
+                    movieName: this.movieForm.movieName,
+                    introduce: this.movieForm.introduce,
+                    director: this.movieForm.director,
+                    actors: this.movieForm.actors,
+                    movieLength: this.movieForm.movieLength,
+                    release: this.movieForm.release,
+                };
+                request({
+                    url: 'api/movieInfo/add',
+                    method: 'post',
+                    // data: this.qsParam(params),
+                    data: JSON.stringify(params),
+                    headers: {'Content-Type': 'application/json'}
+                }).then(res => {
+                    if (res.code === 200) {
+                        this.$message.success("上架成功");
+                    } else {
+                        this.$message.warning("出现了一些问题，请重试~");
+                    }
+                }).catch(err => {
+                    console.log(err);
                 })
             },
             /*上传图片函数*/
