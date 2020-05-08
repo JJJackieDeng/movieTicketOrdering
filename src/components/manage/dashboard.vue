@@ -7,7 +7,6 @@
                     <el-dropdown>
                 <span>
                     <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
-                    <!--todo 目前获取不了-->
                 {{this.userName}}
                 </span>
                         <el-dropdown-menu slot="dropdown">
@@ -151,12 +150,13 @@
     }
 
     .el-header {
-        background-color: #0ea5ff;
+        background-color: rgb(9, 107, 190);
         font-size: 22px;
         color: #000000;
         vertical-align: middle;
         display: flex;
         align-items: center;
+        border: #00c788;
 
     }
 </style>
