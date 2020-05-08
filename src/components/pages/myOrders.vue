@@ -100,12 +100,14 @@
         name: "myOrders",
         data() {
             return {
-                orderUser: 'admin',
+                // orderUser: '',
                 /*是否弹出评论界面，默认为否*/
                 dialogVisible: false,
                 result: {},
                 rating: 9.7,
-                comment: ''
+                comment: '',
+                id: '',
+                name: ''
             }
         },
 
@@ -125,16 +127,38 @@
             },
             getOrderByUser() {
                 request({
-                    url: '/api/order/selectByUser?user=' + this.orderUser,
+                    url: '/api/order/selectByUser?user=' + this.name,
                 }).then(res => {
                     console.log(res);
                     this.result = res.data;
                 }).catch(err => {
                     console.log(err);
                 });
-            }
+            },
+            //获取token并解析
+            init() {
+                let afterBase64 = new Array();
+                // var map = new Map();
+                let Base64 = require('js-base64').Base64
+                let token = sessionStorage.getItem("token");
+                let arr = new Array();
 
+                arr = (token || "").split('.');
+                if (token !== null) {
+                    //解析token
+                    console.log(arr[1])
+                    afterBase64 = Base64.decode(arr[1]);
+                    const data = JSON.parse(afterBase64)
+                    this.name = data.userName;
+                    this.id = data.userId;
+                    console.log(afterBase64)
+                    console.log(this.id);
+                }
 
+            },
+        },
+        created() {
+            this.init();
         }
     }
 </script>
