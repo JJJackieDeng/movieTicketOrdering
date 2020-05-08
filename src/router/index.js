@@ -19,6 +19,7 @@ import myOrders from "../components/pages/myOrders";
 import myInfo from "../components/pages/myInfo";
 import forgotPass from "../components/ForgotPass";
 import Test1 from "../components/test/Test1";
+import searchMap from "../components/pages/searchMap";
 
 
 Vue.use(VueRouter);
@@ -103,6 +104,10 @@ export default new VueRouter({
         {
             path: '/forgotPass',
             component: forgotPass
+        },
+        {
+            path: '/searchMap',
+            component: searchMap
         },
         {
             path: '/test',
