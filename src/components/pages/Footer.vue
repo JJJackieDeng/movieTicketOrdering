@@ -24,7 +24,7 @@
     }
 
     .gradient-bg {
-        margin: 0;
+        margin: 0 auto;
         width: 100%;
         font-family: "Exo", sans-serif;
         color: #fff;
