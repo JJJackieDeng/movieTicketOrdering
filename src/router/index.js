@@ -2,7 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from "@/components/login";
 import home from "@/components/home";
-import Test from "@/components/Test";
 import showDetail from "@/components/pages/showDetail";
 import purchaseDetail from "@/components/pages/purchaseDetail";
 import dashboard from '@/components/manage/dashboard'
@@ -18,7 +17,6 @@ import personal from "../components/pages/personal";
 import myOrders from "../components/pages/myOrders";
 import myInfo from "../components/pages/myInfo";
 import forgotPass from "../components/ForgotPass";
-import Test1 from "../components/test/Test1";
 import searchMap from "../components/pages/searchMap";
 
 
@@ -108,14 +106,6 @@ export default new VueRouter({
         {
             path: '/searchMap',
             component: searchMap
-        },
-        {
-            path: '/test',
-            component: Test
-        },
-        {
-            path: '/test1',
-            component: Test1
         },
         {
             path: '/showDetail/:mid',
