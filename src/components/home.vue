@@ -16,13 +16,13 @@
         <div class="mainContent">
             <!--根据影院或者影片查询-->
             <div class="leftSide">
-                <h1>热门影院</h1>
-                <el-form>
-                    <el-form-item>
-                        <el-input v-model="popularCinema.address" prefix-icon="el-icon-search"></el-input>
-                    </el-form-item>
-                </el-form>
-                <span>高分电影推荐</span>
+                <!--                <h1>热门影院</h1>-->
+                <!--                <el-form>-->
+                <!--                    <el-form-item>-->
+                <!--                        <el-input v-model="popularCinema.address" prefix-icon="el-icon-search"></el-input>-->
+                <!--                    </el-form-item>-->
+                <!--                </el-form>-->
+                <h2 style="color: #ffb440">高分电影推荐</h2>
                 <!--                电影推荐显示-->
                 <div>
                     <div v-for="(item, index) in scoreArr" :key="index" class="al-box-container">
@@ -43,14 +43,14 @@
                             <img @click="toShowDetail(item.id)"
                                  style="width: 300px; height: 400px;"
                                  :src="item.movieInfo.poster" alt="">
-                            <div style="width: 300px">
+                            <div>
                                 <el-button
                                         onmouseover="this.style.backgroundColor='red';"
                                         onmouseout="this.style.backgroundColor='';"
                                         type="primary"
-                                        style="width: 300px"
-                                        class="button"
-                                        @click="toPurchaseDetail(item.id)">选座订票
+                                        class="al-width-100"
+                                        @click="toPurchaseDetail(item.id)">
+                                    选座订票
                                 </el-button>
                             </div>
                         </el-card>
@@ -119,9 +119,9 @@
                 request({
                     url: 'api/order/selectHots',
                 }).then(res => {
-                    console.log(res);
+                    // console.log(res);
                     this.imageHotsList = res.data;
-                    console.log(this.imageHotsList);
+                    // console.log(this.imageHotsList);
                 }).catch(err => {
                     console.log(err);
                 });
@@ -174,9 +174,11 @@
 
             .leftSide {
                 padding: 20px 0 0 20px;
-                width: 300px;
+                width: 290px;
                 float: left;
-                background-color: #fffdf5;
+                /*background-color: #fffdf5;*/
+                border: black;
+                border-radius: 20px;
             }
 
             .rightSide {
