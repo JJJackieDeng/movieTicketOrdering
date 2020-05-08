@@ -64,7 +64,7 @@
 
                     <el-table-column label="操作" width="200px">
                         <template slot-scope="scope">
-                            <el-button type="success" @click="openGet(scope.row.id)">修改</el-button>
+                            <el-button type="success" @click="openGet(scope.row)">修改</el-button>
                             <el-button type="danger" @click="toDelete(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
@@ -85,22 +85,22 @@
                         :visible.sync="dialogVisible"
                         width="30%"
                         :before-close="handleClose">
-                    <el-form ref="form" :model="tableData" label-width="80px">
+                    <el-form ref="form" :model="dialogData" label-width="80px">
                         <el-form-item label="用户名" prop="userName">
-                            <el-input type="text" v-model="userForm.userName"></el-input>
+                            <el-input type="text" v-model="dialogData.userName"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
-                            <el-input v-model="userForm.password"></el-input>
+                            <el-input v-model="dialogData.password"></el-input>
                         </el-form-item>
                         <el-form-item label="确认密码" prop="password">
-                            <el-input v-model="userForm.password"></el-input>
+                            <el-input v-model="dialogData.password"></el-input>
                         </el-form-item>
                         <el-form-item label="性别" prop="sex">
-                            <el-radio v-model="userForm.sex" label="1">男</el-radio>
-                            <el-radio v-model="userForm.sex" label="2">女</el-radio>
+                            <el-radio v-model="dialogData.sex" label="1">男</el-radio>
+                            <el-radio v-model="dialogData.sex" label="2">女</el-radio>
                         </el-form-item>
                         <el-form-item label="电话号码" prop="phoneNumber">
-                            <el-input v-model="userForm.phoneNumber"></el-input>
+                            <el-input v-model="dialogData.phoneNumber"></el-input>
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
@@ -147,6 +147,7 @@
                 tableData: [],
                 limit: 100, // todo ,每页查询多少个
                 offset: 0, //todo 从第一个开始查
+                dialogData: [], //不懂别叫，华为懂
             }
         },
         methods: {
@@ -160,10 +161,11 @@
                 this.offset = val;
             },
             /*修改用户信息窗口*/
-            openGet(id) {
-                if (id) {
+            openGet(val) {
+                this.dialogData = val;
+                if (val.id) {
                     this.dialogVisible = true;
-                    this.userForm.id = id;
+                    this.userForm.id = val.id;
                     userDQL.selectUserByID({
                         id: this.userForm.id
                     }).then(res => {

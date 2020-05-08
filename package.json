@@ -16,6 +16,7 @@
     "element-ui": "^2.13.1",
     "express-serve-static-core": "^0.1.1",
     "jquery": "^3.4.1",
+    "js-base64": "^2.5.2",
     "js-md5": "^0.7.3",
     "less": "^3.0.0",
     "moment": "^2.24.0",
@@ -49,7 +50,8 @@
     "v-viewer": "^1.5.1",
     "vue-image-swipe": "^1.0.5",
     "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.42.0"
+    "webpack": "^4.42.0",
+    "webpack-dev-server": "^3.10.3"
   },
   "eslintConfig": {
     "root": true,
@@ -57,12 +59,10 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
+      "plugin:vue/essential"
     ],
     "rules": {
       "generator-star-spacing": "off",
-      "no-tabs": "off",
       "no-unused-vars": "off",
       "no-irregular-whitespace": "off"
     },
