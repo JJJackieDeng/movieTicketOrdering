@@ -209,7 +209,10 @@
                         method: 'post',
                         /*表单输入的数据必须这样处理*/
                         data: JSON.stringify(params),
-                        headers: {'Content-Type': 'application/json'}
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': sessionStorage.getItem('token')
+                        }
                     }).then(res => {
                             if (res.data.code === 200) {
                                 this.dialogVisible = false;
