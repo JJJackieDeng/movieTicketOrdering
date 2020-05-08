@@ -139,9 +139,15 @@
                         <!--for循环输出展示座位-->
                         <span>座位：<span v-for="(i,index) in chooseSeats" :key="index">{{i | decodeSeats}}</span>
                         </span><br>
-                        <span>票价：<span style="color: #39ac6a">74￥/座</span>
+                        <span>票价：<span style="color: #39ac6a">{{orderInfo.price}}￥/座</span>
                         </span><br>
-                        <span>总价：{{chooseSeats.length * 74}}</span><br>
+                        <span>
+                            总价：
+                            <span style="color: red">
+<!--                                {{this.orderInfo.totalPrice}}-->
+                                ￥{{chooseSeats.length * orderInfo.price}}
+                            </span>
+                        </span><br>
 
                         <div style="margin: 20px 0 0 0;text-align: center">
                             <!--                            在当前场次中选择单个可选座位，-->
@@ -160,7 +166,8 @@
                 :before-close="handleClose">
             <span>订单号：{{this.orderID}}</span><br>
             <span>电影名称： {{movieInfo.movie.movieName}}</span><br>
-            <span>座位：</span><br>
+            <span>座位：<spann v-for="(i,index) in chooseSeats" :key="index">{{i | decodeSeats}}</spann></span><br>
+            <span>总价：￥{{chooseSeats.length * 74}}</span><br>
             <!--            日期与具体开场时间-->
             <span>开场时间：{{orderInfo.schedule.date}} </span><br>
             <span>影院名称：{{orderInfo.cinema}}</span><br>
@@ -243,8 +250,9 @@
                         time: '',
                     },
                     seat: '',
-                    price: 0.0,
-                    totalPrice: 0.0
+                    price: 74,
+                    // totalPrice: this.chooseSeats.length * this.orderInfo.price
+                    totalPrice: this.chooseSeats ? this.chooseSeats.length * this.price : 0
                 },
 
 
@@ -266,6 +274,8 @@
                         this.$set(this.isClick, index, false);
                         this.chooseSeats.splice(index2, 1)
                     }
+                    // this.orderInfo.totalPrice = this.chooseSeats.length * 74;
+                    console.log(this.orderInfo.totalPrice);
                 } else {
                     this.chooseSeats.push(index);
                     this.$set(this.isClick, index, true);
@@ -298,7 +308,7 @@
                 pay({
                     orderID: this.orderID,
                     //todo 订单总价
-                    total: '111',
+                    total: this.orderInfo.totalPrice,
                     movieName: this.movieInfo.movie.movieName,
                     discription: this.movieInfo.introduce
                 }, 'post').then(res => {
@@ -318,7 +328,7 @@
             },
 
 
-            //确定选座
+            //确认选座
             confirmSeats() {
                 /*根据movieID查询当前电影的电影名称*/
                 // console.log(this.schedule.date);
@@ -334,7 +344,7 @@
                         /*todo 未找到解决方案*/
                         endTime: '',
                         /*前台过滤器计算得来，必传*/
-                        total: '',
+                        total: this.orderInfo.totalPrice,
                         /*必传*/
                         /*movie接口*/
                         // movieName: this.movieInfo.movie.movieName,
@@ -345,7 +355,7 @@
                     },
 
                 };
-                // console.log(params);
+                console.log(params);
                 request({
                     url: 'api/seat/add',
                     method: 'post',
@@ -355,6 +365,27 @@
                 }).then(res => {
                     if (res.data.code === 200) {
                         this.$message.success("选座成功！");
+                        /*发送订单信息至用户*/
+                        //todo 组装订单信息
+                        let param2 = {
+                            userName: '',
+                            orderId: '',
+                            cinemaName: '',
+                            address: '',
+                            seats: '',
+                            schedule: '',
+                            phone: ''
+                        };
+                        request({
+                            url: 'api/sendMsg/sendOrderInfo',
+                            method: 'post',
+                            data: this.qsParam(param2),
+                            header: {'Content-Type': 'application/x-www-form-urlencoded'}
+                        }).then(res => {
+                            console.log("短信发送成功")
+                        }).catch(err => {
+                            console.log(err);
+                        })
                         /*弹出支付页面*/
                         // console.log(res.data.data);
                         this.orderID = res.data.data.orderId;
@@ -539,44 +570,26 @@
                 this.orderInfo.schedule.date = this.chooseDate + " " + time;
 
                 //this.$message.success(this.scheduleId + " " + this.chooseDate);
+            },
+            init() {
+                var token = sessionStorage.getItem('token');
+                console.log(token);
             }
 
         },
         // 过滤器
         filters: {
-
-            // 日期过滤器
-            time(data) {
-                let date = new Date(data);
-                let month = date.getMonth() + 1;
-                let day = date.getDate();
-                let hours = date.getHours() > 9 ? date.getHours() : ("0" + date.getHours());
-                let minutes = date.getMinutes() > 9 ? date.getMinutes() : ("0" + date.getMinutes());
-                return month + "月" + day + "日  " + hours + ":" + minutes;
-            },
-
-
-            // 价格过滤器,数字保留两位小数
-            price(data) {
-                let price = parseFloat(data);
-                return price.toFixed(2);
-            },
-
             decodeSeats(val) {
                 var pai = parseInt(val / 20) + 1;
                 var zuo = (val % 20) + 1;
-                return `${pai}排${zuo}座` + ","
+                return `${pai}排${zuo}座` + "||"
 
             }
 
         },
 
         mounted() {
-            // this.getSeats();
             this.getMovieInfoById(this.$route.params.mid);
-
-            // this.getCinema();
-
         },
 
     }
@@ -720,21 +733,6 @@
         font-size: 25px;
     }
 
-
-    .wrapper {
-        height: 100%;
-        padding: 40px;
-        box-sizing: border-box;
-    }
-
-    .cinema-wrapper {
-        height: 100%;
-    }
-
-    .title {
-        text-align: center;
-    }
-
     .dialog-footer {
         text-align: center;
     }
@@ -757,27 +755,6 @@
         color: #585858;
         line-height: 30px;
         text-align: center;
-    }
-
-    .inner-seat-wrapper {
-        position: absolute;
-        top: 120px;
-        bottom: 0;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .seat {
-        float: left;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .inner-seat {
-        width: 80%;
-        height: 80%;
-        cursor: pointer;
     }
 
     .selected-seat {
