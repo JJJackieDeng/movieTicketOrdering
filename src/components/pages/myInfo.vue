@@ -42,10 +42,6 @@
             }
         },
         methods: {
-            getUserIdFromHeader() {
-                console.log("myInfo=====================================");
-                // console.log(userId);
-            },
             getUserInfo() {
                 getUserInfo.selectUserByID({id: this.id}, 'get').then(res => {
                     return res.json()
