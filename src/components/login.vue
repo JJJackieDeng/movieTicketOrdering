@@ -93,7 +93,11 @@
                                 //使用sessionStorage保存token
                                 sessionStorage.setItem("token", res.data)
                                 // console.log(sessionStorage);
-                                this.$router.push({path: '/home'})
+                                if (this.loginForm.username == 'admin') {
+                                    this.$router.push({path: '/dashboard'})
+                                } else {
+                                    this.$router.push({path: '/home'})
+                                }
                             } else if (res.code === 10001) {
                                 this.$message.error("登录失败！请联系管理员")
                             } else if (res.code === 10002) {
