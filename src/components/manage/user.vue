@@ -187,24 +187,29 @@
             /*确认修改*/
             update() {
                 //修改密码之前进行第一次MD5加密
-                let password = this.$md5(this.userForm.password);
+                let password = this.$md5(this.dialogData.password);
                 fetch("/front/api/user/update", {
                     method: "post",
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        id: this.userForm.id,
-                        userName: this.userForm.userName,
-                        sex: this.userForm.sex,
+                        id: this.dialogData.id,
+                        userName: this.dialogData.userName,
+                        sex: this.dialogData.sex,
                         password: password,
-                        phoneNumber: this.userForm.phoneNumber
+                        phoneNumber: this.dialogData.phoneNumber
                     })
-                })
-                    .then(res => {
-                        if (res.data.code === 200) {
+                }).then(res => {
+                    return res.json();
+                }).then(res => {
+                    console.log(res)
+                    if (res.code === 200) {
                             this.$message("提交成功");
-                            this.dialogVisible = true;
+                        this.dialogVisible = false;
                             this.reload();
                         }
+                    if (res.code === 404) {
+                        this.$message.error("更新失败，请重试！");
+                    }
                     })
                     .catch(function (err) {
                         if (err.response) {
