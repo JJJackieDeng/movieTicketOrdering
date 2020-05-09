@@ -203,7 +203,7 @@
                 }).then(res => {
                     console.log(res)
                     if (res.code === 200) {
-                            this.$message("提交成功");
+                        this.$message.success("修改成功");
                         this.dialogVisible = false;
                             this.reload();
                         }
