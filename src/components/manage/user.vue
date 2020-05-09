@@ -87,7 +87,7 @@
                         :before-close="handleClose">
                     <el-form ref="form" :model="dialogData" label-width="80px">
                         <el-form-item label="用户名" prop="userName">
-                            <el-input type="text" v-model="dialogData.userName"></el-input>
+                            <el-input type="text" v-model="dialogData.userName" readOnly="true"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
                             <el-input v-model="dialogData.password"></el-input>
