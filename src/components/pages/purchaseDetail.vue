@@ -91,8 +91,7 @@
                         <span class="illustration-text">不可选</span>
                     </div>
                     <div class="screen">
-                        <!--todo 获取cinema中的放映厅-->
-                        3号激光厅银幕
+                        {{orderInfo.room}}银幕
                     </div>
                     <div class="screen-center">
                         银幕中央
@@ -144,8 +143,8 @@
                         <span>
                             总价：
                             <span style="color: red">
-<!--                                {{this.orderInfo.totalPrice}}-->
-                                ￥{{chooseSeats.length * orderInfo.price}}
+
+                                ￥{{this.orderInfo.totalPrice}}
                             </span>
                         </span><br>
 
@@ -171,7 +170,7 @@
             <!--            日期与具体开场时间-->
             <span>开场时间：{{orderInfo.schedule.date}} </span><br>
             <span>影院名称：{{orderInfo.cinema}}</span><br>
-            <span>影院地址：</span><br>
+            <span>影院地址：{{cinemaInfo.address}} </span><br>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false" type="danger">稍后支付</el-button>
                 <el-button type="primary" @click="toPay">立即支付</el-button>
@@ -187,6 +186,7 @@
     import {request} from "../../utils/request";
     import {pay} from "../../api/commonUrls";
     import {selectByAddress} from "../../api/cinema";
+    import * as getUserInfo from "../../api/user"
     /*行政区域选择器支持*/
     import {pca, pcaa} from 'area-data';
 
@@ -206,6 +206,10 @@
                 /*是否支付界面，默认为否*/
                 dialogVisible: false,
                 id: this.$route.params.mid,
+                //获取当前用户信息
+                userInfo: {},
+                Id: '',
+
                 radio: '',
                 date: '', //用户选择的日期
                 tableData: [],
@@ -251,12 +255,13 @@
                     },
                     seat: '',
                     price: 74,
-                    // totalPrice: this.chooseSeats.length * this.orderInfo.price
-                    totalPrice: this.chooseSeats ? this.chooseSeats.length * this.price : 0
+                    // totalPrice: this.chooseSeats.length * this.price,
+                    // totalPrice: this.chooseSeats ? this.chooseSeats.length * this.price : 0
+                    totalPrice: 0
                 },
 
 
-                // tempAddress: "广东省广州市番禺区",
+                // tempAddres: "广东省广州市番禺区",
 
             }
 
@@ -274,12 +279,13 @@
                         this.$set(this.isClick, index, false);
                         this.chooseSeats.splice(index2, 1)
                     }
-                    // this.orderInfo.totalPrice = this.chooseSeats.length * 74;
-                    console.log(this.orderInfo.totalPrice);
                 } else {
                     this.chooseSeats.push(index);
                     this.$set(this.isClick, index, true);
                 }
+
+                this.orderInfo.totalPrice = this.chooseSeats.length * 74;
+                console.log(this.orderInfo.totalPrice);
             },
 
 
@@ -304,11 +310,13 @@
 
             toPay() {
                 /*付款接口，其中orderID*/
+                console.log(this.orderInfo.totalPrice)
                 let params = {};
                 pay({
                     orderID: this.orderID,
-                    //todo 订单总价
                     total: this.orderInfo.totalPrice,
+                    // total: '111',
+                    // movieName: this.movieInfo.movie.movieName,
                     movieName: this.movieInfo.movie.movieName,
                     discription: this.movieInfo.introduce
                 }, 'post').then(res => {
@@ -328,7 +336,7 @@
             },
 
 
-            //确认选座
+            //确定选座
             confirmSeats() {
                 /*根据movieID查询当前电影的电影名称*/
                 // console.log(this.schedule.date);
@@ -350,7 +358,7 @@
                         // movieName: this.movieInfo.movie.movieName,
                         movieName: this.movieInfo.movie.movieName,
                         /*cinema接口*/
-                        address: '',
+                        address: this.cinemaInfo.address,
                         // order: ''//订单信息address,status,runtime为schudule中的schedule,seats字段为rows
                     },
 
@@ -368,13 +376,13 @@
                         /*发送订单信息至用户*/
                         //todo 组装订单信息
                         let param2 = {
-                            userName: '',
-                            orderId: '',
-                            cinemaName: '',
-                            address: '',
+                            userName: this.userInfo.userName,
+                            orderId: this.orderID,
+                            cinemaName: this.orderInfo.cinema,
+                            address: this.cinemaInfo.address,
                             seats: '',
-                            schedule: '',
-                            phone: ''
+                            schedule: this.orderInfo.schedule.date,
+                            phone: this.userInfo.phoneNumber
                         };
                         request({
                             url: 'api/sendMsg/sendOrderInfo',
@@ -571,18 +579,48 @@
 
                 //this.$message.success(this.scheduleId + " " + this.chooseDate);
             },
+            getUserInfo() {
+                getUserInfo.selectUserByID({id: this.Id}, 'get').then(res => {
+                    return res.json()
+                }).then(res => {
+                    this.userInfo = res;
+                    if (res.sex == 1) {
+                        this.userInfo.sex = "男"
+                    } else {
+                        this.userInfo.sex = "女"
+                    }
+
+
+                })
+            },
             init() {
-                var token = sessionStorage.getItem('token');
-                console.log(token);
+                let afterBase64 = new Array();
+                var map = new Map();
+                let Base64 = require('js-base64').Base64
+                let token = sessionStorage.getItem("token");
+                console.log(token)
+                let arr = new Array();
+
+                arr = (token || "").split('.');
+                if (token !== null) {
+                    //解析token
+                    console.log(arr[1])
+                    afterBase64 = Base64.decode(arr[1]);
+                    let data = JSON.parse(afterBase64)
+                    this.name = data.userName;
+                    this.Id = data.userId;
+                    console.log(afterBase64)
+                    //console.log(Id);
+                }
             }
 
         },
         // 过滤器
         filters: {
             decodeSeats(val) {
-                var pai = parseInt(val / 20) + 1;
-                var zuo = (val % 20) + 1;
-                return `${pai}排${zuo}座` + "||"
+                var row = parseInt(val / 20) + 1;
+                var col = (val % 20) + 1;
+                return `${row}排${col}座` + "||"
 
             }
 
@@ -591,6 +629,10 @@
         mounted() {
             this.getMovieInfoById(this.$route.params.mid);
         },
+        created() {
+            this.init();
+            this.getUserInfo();
+        }
 
     }
 
