@@ -7,7 +7,7 @@
                     <el-dropdown>
                 <span>
                     <i class="el-icon-s-custom" style="font-size:20px; margin-right:10px"></i>
-                {{this.userName}}
+                {{this.name}}
                 </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item icon="el-icon-user" split-button="true">
@@ -69,10 +69,47 @@
         name: "dashboard",
         data() {
             return {
-                isCollapse: false
+                isCollapse: false,
+                userName: '',
+                Id: '',
+                userInfo: '',
+                name: '',
             }
         },
         methods: {
+            getUserInfo() {
+                getUserInfo.selectUserByID({id: this.Id}, 'get').then(res => {
+                    return res.json()
+                }).then(res => {
+                    this.userInfo = res;
+                    if (res.sex == 1) {
+                        this.userInfo.sex = "男"
+                    } else {
+                        this.userInfo.sex = "女"
+                    }
+
+
+                })
+            },
+            init() {
+                let afterBase64 = new Array();
+                let Base64 = require('js-base64').Base64
+                let token = sessionStorage.getItem("token");
+                console.log(token)
+                let arr = new Array();
+
+                arr = (token || "").split('.');
+                if (token !== null) {
+                    //解析token
+                    console.log(arr[1])
+                    afterBase64 = Base64.decode(arr[1]);
+                    let data = JSON.parse(afterBase64)
+                    this.name = data.userName;
+                    this.Id = data.userId;
+                    console.log(afterBase64)
+                    //console.log(Id);
+                }
+            },
             toManageHome() {
                 this.$router.push('manageHome');
             },
